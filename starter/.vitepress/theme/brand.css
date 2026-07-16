@@ -1,0 +1,35 @@
+/* ===============================================================
+ * Brand tokens for THIS site.
+ *
+ * This file is the theming seam: override the VitePress `--vp-c-*`
+ * and `--vp-font-*` tokens here and every component (built-in and
+ * shared) picks up the palette automatically. It loads after the
+ * theme's defaults (theme/src/styles/vars.css), so anything you set
+ * here wins. Delete a block to fall back to the neutral default.
+ *
+ * Reference of commonly overridden tokens: THEMING.md in the
+ * template repo.
+ * =============================================================== */
+
+:root {
+  /* Primary brand accent. */
+  --vp-c-brand-1: #3e5c76;
+  --vp-c-brand-2: #52789a;
+  --vp-c-brand-3: #2d4357;
+  --vp-c-brand-soft: rgba(62, 92, 118, 0.14);
+
+  /* Fonts — if you load webfonts (via `head` in config.ts or
+   * self-hosted in public/), name them here. */
+  /* --vp-font-family-base: 'Geist Variable', system-ui, sans-serif; */
+  /* --vp-font-family-mono: 'JetBrains Mono Variable', ui-monospace, monospace; */
+
+  /* Navbar logo height (default 24px). */
+  /* --vp-nav-logo-height: 32px; */
+}
+
+html.dark {
+  --vp-c-brand-1: #7da2c1;
+  --vp-c-brand-2: #52789a;
+  --vp-c-brand-3: #3e5c76;
+  --vp-c-brand-soft: rgba(125, 162, 193, 0.2);
+}

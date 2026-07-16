@@ -1,0 +1,29 @@
+{
+  "name": "@leapsight/vitepress-theme",
+  "version": "0.1.0",
+  "description": "Leapsight shared VitePress theme: layout, Vue components and config kit reused across documentation sites.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./config": "./config/index.js",
+    "./styles/*": "./src/styles/*"
+  },
+  "files": [
+    "src",
+    "config"
+  ],
+  "peerDependencies": {
+    "vitepress": "^1.5.0",
+    "vue": "^3.4.0"
+  },
+  "dependencies": {
+    "markdown-it": "^14.1.0",
+    "markdown-it-container": "^4.0.0",
+    "markdown-it-deflist": "^3.0.0",
+    "markdown-it-footnote": "^4.0.0",
+    "markdown-it-katex": "^2.0.3",
+    "markdown-it-task-lists": "^2.1.1",
+    "medium-zoom": "^1.1.0"
+  }
+}

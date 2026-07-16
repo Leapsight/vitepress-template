@@ -1,0 +1,23 @@
+{
+  "name": "leapsight-vitepress-template",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "workspaces": [
+    "theme",
+    "kb",
+    "blog",
+    "starter",
+    "blog-starter"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace starter",
+    "build": "npm run build --workspace starter",
+    "preview": "npm run preview --workspace starter",
+    "dev:blog": "npm run dev --workspace blog-starter",
+    "build:blog": "npm run build --workspace blog-starter",
+    "preview:blog": "npm run preview --workspace blog-starter"
+  }
+}

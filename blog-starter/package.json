@@ -1,0 +1,20 @@
+{
+  "name": "leapsight-blog-starter",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
+  },
+  "dependencies": {
+    "@leapsight/vitepress-theme": "*",
+    "@leapsight/vitepress-kb": "*",
+    "@leapsight/vitepress-blog": "*"
+  },
+  "devDependencies": {
+    "vitepress": "^1.6.4",
+    "vue": "^3.5.13"
+  }
+}

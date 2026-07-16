@@ -1,0 +1,72 @@
+# SPDX-License-Identifier: Apache-2.0
+#
+# SHACL shapes for a schema.org blog knowledge graph. The build-time SHACL
+# gate validates the expanded triples against these shapes and FAILS THE BUILD
+# on any violation. IRIs mirror schema.org; keep in sync with the JSON-LD
+# context composed by the blog KB preset.
+
+@prefix sh:     <http://www.w3.org/ns/shacl#> .
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+@prefix schema: <https://schema.org/> .
+
+# Every typed post/author/tag node carries a human-readable label
+# (schema:name, mapped from frontmatter `title` by the JSON-LD context).
+schema:NodeShape
+    a sh:NodeShape ;
+    sh:targetClass schema:BlogPosting, schema:Article, schema:Person, schema:CollectionPage ;
+    sh:property [
+        sh:path schema:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A KB node must have a label (frontmatter `title`)." ;
+    ] .
+
+# Object properties must reference another resource by @id (an IRI), never a
+# literal. A hand-authored `schema:about: "some text"` is a build failure.
+
+schema:AboutShape
+    a sh:NodeShape ;
+    sh:targetSubjectsOf schema:about ;
+    sh:property [
+        sh:path schema:about ;
+        sh:nodeKind sh:IRI ;
+        sh:message "`schema:about` must reference a node by @id / URL." ;
+    ] .
+
+schema:MentionsShape
+    a sh:NodeShape ;
+    sh:targetSubjectsOf schema:mentions ;
+    sh:property [
+        sh:path schema:mentions ;
+        sh:nodeKind sh:IRI ;
+        sh:message "`schema:mentions` must reference a node by @id / URL." ;
+    ] .
+
+schema:IsPartOfShape
+    a sh:NodeShape ;
+    sh:targetSubjectsOf schema:isPartOf ;
+    sh:property [
+        sh:path schema:isPartOf ;
+        sh:nodeKind sh:IRI ;
+        sh:message "`schema:isPartOf` must reference a series/collection by @id." ;
+    ] .
+
+schema:AuthorShape
+    a sh:NodeShape ;
+    sh:targetSubjectsOf schema:author ;
+    sh:property [
+        sh:path schema:author ;
+        sh:nodeKind sh:IRI ;
+        sh:message "`schema:author` must reference a Person node by @id." ;
+    ] .
+
+schema:RelatedShape
+    a sh:NodeShape ;
+    sh:targetSubjectsOf schema:relatedLink ;
+    sh:property [
+        sh:path schema:relatedLink ;
+        sh:nodeKind sh:IRI ;
+        sh:message "`schema:relatedLink` must reference a node by @id / URL." ;
+    ] .

@@ -1,0 +1,17 @@
+/* SPDX-License-Identifier: Apache-2.0
+ * Blog-wide structural styling (brand-independent; colors via tokens). */
+
+/* Give post/listing pages a comfortable measure even without a sidebar. */
+.blog-post-list,
+.blog-archive,
+.blog-tagpage,
+.blog-authorpage {
+  max-width: 48rem;
+}
+
+/* Cover image on a post page (frontmatter `cover`, if the site renders it). */
+.vp-doc img.blog-cover {
+  width: 100%;
+  border-radius: 10px;
+  margin: 0 0 1.5rem;
+}

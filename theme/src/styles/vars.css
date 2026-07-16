@@ -1,0 +1,75 @@
+/* ===============================================================
+ * Default brand tokens — a neutral, deliberately unbranded palette.
+ *
+ * This is the single theming seam: each site overrides these
+ * `--vp-c-*` / `--vp-font-*` tokens in its own CSS (loaded after the
+ * theme, e.g. `.vitepress/theme/brand.css`) and every component —
+ * VitePress built-ins and the shared ones alike — picks up the brand
+ * automatically. See THEMING.md at the template root.
+ * =============================================================== */
+
+:root {
+  /* Light substrate. */
+  --vp-c-bg: #f7f7f5;
+  --vp-c-bg-alt: #efefed;
+  --vp-c-bg-elv: #ffffff;
+  --vp-c-bg-soft: #efefed;
+  --vp-c-bg-mute: #d5d5d3;
+
+  --vp-c-text-1: #1d1d1f;
+  --vp-c-text-2: #6e6e73;
+  --vp-c-text-3: #86868b;
+
+  --vp-c-divider: #d5d5d3;
+  --vp-c-border: #d5d5d3;
+  --vp-c-gutter: #efefed;
+
+  /* Primary brand accent (placeholder slate blue — replace per site). */
+  --vp-c-brand-1: #3e5c76;
+  --vp-c-brand-2: #52789a;
+  --vp-c-brand-3: #2d4357;
+  --vp-c-brand-soft: rgba(62, 92, 118, 0.14);
+
+  --vp-c-tip-1: #2a7020;
+  --vp-c-tip-soft: rgba(42, 112, 32, 0.14);
+  --vp-c-warning-1: #b86000;
+  --vp-c-warning-soft: rgba(184, 96, 0, 0.14);
+  --vp-c-danger-1: #c04030;
+  --vp-c-danger-soft: rgba(192, 64, 48, 0.14);
+
+  /* Typography. Font loading is the site's business (head links or
+   * self-hosted); the fallback stacks keep things legible if a site
+   * loads nothing. */
+  --vp-font-family-base: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial,
+    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+  --vp-font-family-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+}
+
+html.dark {
+  /* Dark substrate. */
+  --vp-c-bg: #111110;
+  --vp-c-bg-alt: #1a1a18;
+  --vp-c-bg-elv: #1a1a18;
+  --vp-c-bg-soft: #1a1a18;
+  --vp-c-bg-mute: #2c2c2a;
+
+  --vp-c-text-1: #f5f5f3;
+  --vp-c-text-2: #aeaeb2;
+  --vp-c-text-3: #6e6e73;
+
+  --vp-c-divider: #2c2c2a;
+  --vp-c-border: #48484a;
+  --vp-c-gutter: #1a1a18;
+
+  --vp-c-brand-1: #7da2c1;
+  --vp-c-brand-2: #52789a;
+  --vp-c-brand-3: #3e5c76;
+  --vp-c-brand-soft: rgba(125, 162, 193, 0.2);
+
+  --vp-c-tip-1: #6abe6a;
+  --vp-c-tip-soft: rgba(106, 190, 106, 0.2);
+  --vp-c-warning-1: #ff9f0a;
+  --vp-c-warning-soft: rgba(255, 159, 10, 0.2);
+  --vp-c-danger-1: #e05040;
+  --vp-c-danger-soft: rgba(224, 80, 64, 0.2);
+}

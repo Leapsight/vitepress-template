@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# VitePress build output + caches (all workspace sites)
+**/.vitepress/dist/
+**/.vitepress/cache/
+**/.vitepress/.temp/
+dist/
+cache/
+.temp/
+
+# Generated knowledge-graph artifacts (written by createKbLoader.artifactDir)
+**/public/kb/
+**/public/bondy-data/
+
+# Generated feeds are emitted into the build output (already ignored via dist)
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment / local overrides
+.env
+.env.*
+!.env.example
+*.local
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp

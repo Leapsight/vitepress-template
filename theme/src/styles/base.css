@@ -1,0 +1,74 @@
+/* ===============================================================
+ * Structural polish — brand-independent rules shared by all sites.
+ * =============================================================== */
+
+/* Prevent sub/sup from affecting line height. */
+sup,
+sub {
+  vertical-align: baseline;
+  position: relative;
+  top: -0.4em;
+}
+sub {
+  top: 0.4em;
+}
+
+/* Prose inline <code> — VitePress paints a heavy bg-mute pill on
+ * every <code> inside .vp-doc. Quieter treatment: no background, no
+ * padding, just monospace + weight. */
+.vp-doc :not(pre) > code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  color: var(--vp-c-text-1);
+  font-size: 0.85em;
+  font-weight: 500;
+}
+
+/* Fenced code blocks — slightly smaller than prose so code reads
+ * distinct from running text without becoming unreadable. */
+.vp-doc div[class*='language-'] pre,
+.vp-doc div[class*='language-'] code {
+  font-size: 0.9em;
+}
+
+/* Code-block wrapping. VitePress defaults to horizontal scroll on
+ * long lines; for documentation reading, rather-wrap-than-scroll is
+ * the better tradeoff. */
+.vp-doc div[class*='language-'] pre,
+.vp-doc div[class*='language-'] code {
+  white-space: pre-wrap;
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+
+/* Sidebar group titles render as uppercase labels so they read as
+ * section headers, distinct from the page links beneath them. */
+.VPSidebar .VPSidebarItem.level-0 > .item > .text,
+.VPSidebar .VPSidebarItem.level-1.collapsible > .item > .text {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+/* Sidebar density — fit more entries per viewport without losing the
+ * active/hover indicator. */
+.VPSidebar .VPSidebarItem.is-link .item {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+.VPSidebar .VPSidebarItem.is-link .text {
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+/* Definition lists (markdown-it-deflist). */
+.vp-doc dt {
+  font-weight: bold;
+  font-style: italic;
+}
+
+.vp-doc .footnotes {
+  font-size: 14px;
+}

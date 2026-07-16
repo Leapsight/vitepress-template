@@ -1,0 +1,198 @@
+/* ===============================================================
+ * Styles for the markdown-container components: tabs, buttons,
+ * columns, watermark. Brand-independent; colors come from tokens.
+ * =============================================================== */
+
+/* -------------------------------------------------------------- */
+/* TABS (pairs with <Tabs>/<Tab> and the `::: tabs` container)     */
+/* -------------------------------------------------------------- */
+
+.tabs-component {
+  margin: 1.5em 0;
+}
+
+.tabs-component-tabs {
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-start;
+  border: solid 1px var(--vp-c-divider);
+  border-radius: 6px;
+  margin-bottom: -1px !important;
+  padding-left: 0;
+}
+
+.tabs-component-tab {
+  border: solid 1px var(--vp-c-divider);
+  height: 100%;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 8px;
+  margin-right: 0;
+  list-style: none;
+  background-color: var(--vp-c-bg-soft);
+}
+
+.tabs-component-tab:not(:last-child) {
+  border-bottom: dotted 1px var(--vp-c-divider);
+}
+
+.tabs-component-tab.is-active {
+  color: var(--vp-c-text-1);
+  border-bottom: solid 1px var(--vp-c-bg);
+  background-color: inherit;
+}
+
+.tabs-component-tab.is-disabled * {
+  color: var(--vp-c-text-3);
+  cursor: not-allowed !important;
+}
+
+.tabs-component-tab-a {
+  align-items: center;
+  color: inherit;
+  display: flex;
+  padding: 0.75em 1em;
+  text-decoration: none;
+}
+
+.tabs-component-panels {
+  padding: 2em 0;
+}
+
+@media (min-width: 700px) {
+  .tabs-component-tabs {
+    border: 0;
+  }
+
+  .tabs-component-tab {
+    border-radius: 3px 3px 0 0;
+    margin-right: 0.5em;
+  }
+
+  .tabs-component-tab.is-active {
+    z-index: 2;
+    border-bottom: solid 1px var(--vp-c-bg);
+  }
+
+  .tabs-component-panels {
+    background-color: var(--vp-c-bg);
+    border: solid 1px var(--vp-c-divider);
+    border-radius: 0 6px 6px 6px;
+    padding: 2em;
+  }
+
+  /* Variant for code-only tab groups: <Tabs class="code"> or
+   * `::: tabs code`. */
+  .tabs-component.code > .tabs-component-panels {
+    background-color: var(--vp-code-block-bg);
+    border: none;
+    border-radius: 0 6px 6px 6px;
+    padding: 0;
+  }
+}
+
+/* -------------------------------------------------------------- */
+/* BUTTONS (`::: button URL` container and .ls-button class)       */
+/* -------------------------------------------------------------- */
+
+.ls-button {
+  display: inline-block;
+  border: 1px solid transparent;
+  text-align: center;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: color 0.25s, border-color 0.25s, background-color 0.25s;
+  text-decoration: none !important;
+}
+.ls-button:active {
+  transition: color 0.1s, border-color 0.1s, background-color 0.1s;
+}
+.ls-button.medium {
+  border-radius: 20px;
+  padding: 0 20px;
+  line-height: 38px;
+  font-size: 14px;
+}
+.ls-button.big {
+  border-radius: 24px;
+  padding: 0 24px;
+  line-height: 46px;
+  font-size: 16px;
+}
+/* markdown-it-container inserts a <p> inside the anchor. */
+.ls-button.medium p,
+.ls-button.big p {
+  display: block !important;
+  margin: 5px !important;
+  padding: 0px !important;
+}
+.ls-button.brand {
+  border-color: var(--vp-button-brand-border);
+  color: var(--vp-button-brand-text);
+  background-color: var(--vp-button-brand-bg);
+}
+.ls-button.brand:hover {
+  border-color: var(--vp-button-brand-hover-border);
+  color: var(--vp-button-brand-hover-text);
+  background-color: var(--vp-button-brand-hover-bg);
+}
+.ls-button.alt {
+  border-color: var(--vp-button-alt-border);
+  color: var(--vp-button-alt-text);
+  background-color: var(--vp-button-alt-bg);
+}
+.ls-button.alt:hover {
+  border-color: var(--vp-button-alt-hover-border);
+  color: var(--vp-button-alt-hover-text);
+  background-color: var(--vp-button-alt-hover-bg);
+}
+
+/* Center-aligned wrapper emitted by the `::: button` container. */
+.vp-doc .action {
+  margin: 24px 0;
+  text-align: center;
+}
+
+/* -------------------------------------------------------------- */
+/* COLUMNS (`::: columns` / `::: column` containers)               */
+/* -------------------------------------------------------------- */
+
+@media (min-width: 992px) {
+  .column-wrapper {
+    display: flex;
+  }
+
+  .column {
+    flex: 1;
+    max-width: 50%;
+  }
+
+  .column:first-child {
+    margin-right: 20px;
+  }
+}
+
+/* -------------------------------------------------------------- */
+/* DEFINITION container (`::: definition Title`)                   */
+/* -------------------------------------------------------------- */
+
+.custom-block.definition {
+  border-color: var(--vp-c-brand-1);
+  background-color: var(--vp-c-brand-soft);
+}
+
+/* -------------------------------------------------------------- */
+/* UTILITIES                                                       */
+/* -------------------------------------------------------------- */
+
+/* DRAFT watermark (frontmatter `draft: true`, rendered by Layout). */
+.ls-watermark {
+  font-size: 40px;
+  color: var(--vp-c-danger-1);
+  position: fixed;
+  top: 9%;
+  right: 35%;
+  opacity: 0.8;
+  z-index: 1;
+  pointer-events: none;
+}
