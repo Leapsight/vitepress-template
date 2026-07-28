@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress'
-import { withThemeDefaults } from '@leapsight/vitepress-theme/config'
-import { withKbDefaults } from '@leapsight/vitepress-kb/config'
-import { blogContext, blogTransformPageData, emitFeeds } from '@leapsight/vitepress-blog/config'
+import { withThemeDefaults } from '@leapsight/vitepress-template/theme/config'
+import { withKbDefaults } from '@leapsight/vitepress-template/kb/config'
+import { blogContext, blogTransformPageData, emitFeeds } from '@leapsight/vitepress-template/blog/config'
 
 // ---- Site identity ---------------------------------------------------------
 // `siteNamespace` is the IRI base for this site's stable @ids. `namespaces`
@@ -57,7 +57,7 @@ export default defineConfig(
 
         // The shared packages ship raw .ts/.vue source.
         vite: {
-          ssr: { noExternal: ['@leapsight/vitepress-kb', '@leapsight/vitepress-blog'] }
+          ssr: { noExternal: ['@leapsight/vitepress-template/kb', '@leapsight/vitepress-template/blog'] }
         }
       },
       // Register the typed-edge markdown rule against the blog ontology.

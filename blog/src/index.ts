@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
 //
-// Client entry for @leapsight/vitepress-blog. Compose with the theme (and KB):
+// Client entry for @leapsight/vitepress-template/blog. Compose with the theme (and KB):
 //
 //   // .vitepress/theme/index.ts
-//   import Theme from '@leapsight/vitepress-theme'
-//   import { withKb } from '@leapsight/vitepress-kb'
-//   import { withBlog, blogKbUi } from '@leapsight/vitepress-blog'
+//   import Theme from '@leapsight/vitepress-template/theme'
+//   import { withKb } from '@leapsight/vitepress-template/kb'
+//   import { withBlog, blogKbUi } from '@leapsight/vitepress-template/blog'
 //   import { data as kbData } from '../kb.data'
 //   import { data as posts } from '../posts.data'
 //   export default withKb(withBlog(Theme, posts), kbData, blogKbUi)
@@ -20,6 +20,8 @@ import Archive from './components/Archive.vue'
 import SeriesNav from './components/SeriesNav.vue'
 import RelatedPosts from './components/RelatedPosts.vue'
 import ReadingProgress from './components/ReadingProgress.vue'
+import Quote from './components/Quote.vue'
+import AnnouncementBanner from './components/AnnouncementBanner.vue'
 import { POSTS_KEY } from './types'
 import type { PostSummary } from './types'
 import './styles/blog.css'
@@ -33,7 +35,9 @@ export {
   Archive,
   SeriesNav,
   RelatedPosts,
-  ReadingProgress
+  ReadingProgress,
+  Quote,
+  AnnouncementBanner
 }
 export { usePosts, useCurrentPost } from './composables'
 export * from './types'
@@ -49,7 +53,9 @@ const BLOG_COMPONENTS = {
   Archive,
   SeriesNav,
   RelatedPosts,
-  ReadingProgress
+  ReadingProgress,
+  Quote,
+  AnnouncementBanner
 }
 
 /**

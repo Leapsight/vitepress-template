@@ -2,7 +2,7 @@
 //
 // RSS 2.0 + Atom + JSON Feed generation, for a site's `buildEnd` hook:
 //
-//     import { emitFeeds } from '@leapsight/vitepress-blog/config'
+//     import { emitFeeds } from '@leapsight/vitepress-template/blog/config'
 //     buildEnd: (cfg) => emitFeeds(cfg, {
 //       hostname: 'https://blog.example.com',
 //       title: 'Acme Blog', description: '…', pattern: 'posts/*.md'
@@ -53,7 +53,7 @@ export async function emitFeeds(siteConfig, options) {
     language: siteConfig.site?.lang ?? 'en',
     copyright: options.copyright ?? `© ${new Date().getFullYear()}`,
     updated: new Date(),
-    generator: 'VitePress + @leapsight/vitepress-blog',
+    generator: 'VitePress + @leapsight/vitepress-template/blog',
     feedLinks: {
       rss: link('/feed.rss'),
       atom: link('/feed.atom'),

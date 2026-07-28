@@ -90,6 +90,7 @@ const pageItems = computed(() => {
 .blog-post-meta { font-size: 0.85rem; color: var(--vp-c-text-3); display: flex; gap: 0.4rem; flex-wrap: wrap; }
 .blog-post-excerpt { margin: 0.5rem 0 0.6rem; color: var(--vp-c-text-2); line-height: 1.6; }
 .blog-post-tags { list-style: none; padding: 0; margin: 0.4rem 0 0; display: flex; flex-wrap: wrap; gap: 0.4rem 0.7rem; }
+.blog-post-tags li { margin: 0; }
 .blog-post-tags a { font-size: 0.8rem; color: var(--vp-c-text-3); text-decoration: none; }
 .blog-post-tags a:hover { color: var(--vp-c-brand-1); }
 .blog-pagination {

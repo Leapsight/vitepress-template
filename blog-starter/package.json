@@ -9,9 +9,7 @@
     "preview": "vitepress preview"
   },
   "dependencies": {
-    "@leapsight/vitepress-theme": "*",
-    "@leapsight/vitepress-kb": "*",
-    "@leapsight/vitepress-blog": "*"
+    "@leapsight/vitepress-template": "file:.."
   },
   "devDependencies": {
     "vitepress": "^1.6.4",

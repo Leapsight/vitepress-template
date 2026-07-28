@@ -1,4 +1,4 @@
-# Theming a site built on @leapsight/vitepress-theme
+# Theming a site built on @leapsight/vitepress-template/theme
 
 Branding a site never touches the shared theme. Everything happens in
 the site's `.vitepress/theme/brand.css`, which loads after the theme's
@@ -81,7 +81,7 @@ components or layout slots, extend the theme instead of forking it:
 
 ```ts
 // .vitepress/theme/index.ts
-import Theme from '@leapsight/vitepress-theme'
+import Theme from '@leapsight/vitepress-template/theme'
 import MyWidget from './MyWidget.vue'
 import './brand.css'
 

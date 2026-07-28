@@ -12,3 +12,86 @@
   color: var(--vp-c-text-3);
   vertical-align: super;
 }
+
+/* --- Concept side annotations: badges that link into the graph ------------
+   Placed at the END of a paragraph. Wide (>1120px): absolute, top-aligned in
+   the right gutter. Narrow: in-flow, below the paragraph. Tuned for a centred
+   prose column; sites with a different layout can override the widths. */
+.vp-doc p:has(> .concept-note) {
+  position: relative;
+}
+.concept-note {
+  position: absolute;
+  top: 0.25rem;
+  left: 100%;
+  display: block;
+  width: 172px;
+  margin-left: 1.6rem;
+  padding: 0.6rem 0.8rem;
+  font-family: var(--vp-font-family-base);
+  line-height: 1.3;
+  text-decoration: none;
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+  border-left: 3px solid var(--vp-c-brand-1);
+  border-radius: 9px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.concept-note:hover {
+  border-color: var(--vp-c-brand-1);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.14);
+}
+.concept-kind {
+  display: block;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--vp-c-text-3);
+}
+.concept-label {
+  display: block;
+  margin: 0.18rem 0 0.1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--vp-c-text-1);
+}
+.concept-arrow {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--vp-c-brand-1);
+}
+@media (max-width: 1120px) {
+  .vp-doc p:has(> .concept-note) {
+    position: static;
+  }
+  .concept-note {
+    position: static;
+    width: auto;
+    max-width: 26rem;
+    margin: 0.9rem 0;
+  }
+}
+
+/* --- Glossary index ------------------------------------------------------- */
+.kb-glossary-list {
+  margin: 1.5rem 0;
+}
+.kb-glossary-item {
+  padding: 0.9rem 0;
+  border-top: 1px solid var(--vp-c-divider);
+}
+.kb-glossary-item dt {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+.kb-glossary-item dt a {
+  text-decoration: none;
+}
+.kb-glossary-item dd {
+  margin: 0.25rem 0 0;
+  color: var(--vp-c-text-2);
+}
+.kb-glossary-empty {
+  color: var(--vp-c-text-3);
+}

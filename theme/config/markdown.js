@@ -25,7 +25,7 @@ import mdContainer from 'markdown-it-container'
  * @param {{
  *   math?: boolean,
  *   vPreCode?: boolean,
- *   injectTitle?: boolean,
+ *   injectTitle?: boolean | ((env: any) => boolean),
  *   containers?: boolean
  * }} [options]
  */
@@ -63,12 +63,15 @@ export function applyMarkdown(md, options = {}) {
   if (injectTitle) {
     // Synthesize an `# H1` from frontmatter `title:` when the body
     // doesn't already start with a heading. Lets pages declare their
-    // title once, in frontmatter.
+    // title once, in frontmatter. Pass a predicate to opt pages out — e.g.
+    // a blog whose layout renders the post's own title + byline header.
+    const shouldInject = typeof injectTitle === 'function' ? injectTitle : () => true
     md.core.ruler.before('normalize', 'ls-inject-title', (state) => {
       const fm = state.env?.frontmatter
       const title = fm?.title?.trim?.()
       if (!title) return
       if (/^\s*#\s/.test(state.src)) return
+      if (!shouldInject(state.env)) return
       state.src = `# ${title}\n\n${state.src}`
     })
   }

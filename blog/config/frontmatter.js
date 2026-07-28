@@ -23,6 +23,13 @@ export const postFrontmatterSchema = z
     cover: z.string().optional(),
     draft: z.boolean().optional(),
     featured: z.boolean().optional(),
+    // Site-wide announcement bar: flag a post, optionally with copy, a link
+    // label, and a lifetime (weeks from `date`, or an explicit end date).
+    announce: z.boolean().optional(),
+    announceText: z.string().optional(),
+    announceCta: z.string().optional(),
+    announceWeeks: z.number().optional(),
+    announceUntil: z.union([z.string(), z.date()]).optional(),
     canonical: z.string().url().optional()
   })
   .passthrough()

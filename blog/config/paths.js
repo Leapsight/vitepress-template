@@ -3,7 +3,7 @@
 // Dynamic-route path loaders for tag + author archive pages. A site adds:
 //
 //     // tags/[tag].paths.js
-//     import { createTagPaths } from '@leapsight/vitepress-blog/config'
+//     import { createTagPaths } from '@leapsight/vitepress-template/blog/config'
 //     export default createTagPaths()
 //
 // with a sibling `tags/[tag].md` that renders <TagPage :tag="$params.tag" />.

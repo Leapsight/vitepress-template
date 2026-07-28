@@ -6,10 +6,11 @@ current post up in the posts index by route, so it needs no props.
 -->
 <template>
   <div v-if="post" class="blog-meta">
-    <time v-if="post.dateFormatted">{{ post.dateFormatted }}</time>
-    <span v-if="post.readingTime">· {{ post.readingTime }} min read</span>
-    <span v-if="post.authors.length">· by {{ post.authors.join(', ') }}</span>
-    <span v-if="post.series" class="blog-meta-series">· series: {{ post.series }}</span>
+    <div class="blog-meta-line">
+      <time v-if="post.dateFormatted">{{ post.dateFormatted }}</time>
+      <span v-if="post.readingTime">· {{ post.readingTime }} min read</span>
+      <span v-if="post.authors.length">· by {{ post.authors.join(', ') }}</span>
+    </div>
     <ul v-if="post.tags.length" class="blog-meta-tags">
       <li v-for="t in post.tags" :key="t">
         <a :href="withBase(`/tags/${slug(t)}`)">#{{ t }}</a>
@@ -31,14 +32,17 @@ function slug(s: string): string {
 <style scoped>
 .blog-meta {
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.4rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.55rem;
   margin: -0.5rem 0 1.5rem;
   font-size: 0.9rem;
   color: var(--vp-c-text-3);
 }
-.blog-meta-tags { display: inline-flex; gap: 0.5rem; list-style: none; padding: 0; margin: 0; }
+.blog-meta-line { display: flex; align-items: center; flex-wrap: wrap; gap: 0.4rem; }
+.blog-meta-tags { display: inline-flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; padding: 0; margin: 0; }
+/* reset the VitePress `.vp-doc li + li` margin so tags stay on one baseline */
+.blog-meta-tags li { margin: 0; }
 .blog-meta-tags a { color: var(--vp-c-text-3); text-decoration: none; }
 .blog-meta-tags a:hover { color: var(--vp-c-brand-1); }
 </style>

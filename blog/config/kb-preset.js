@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 //
-// schema.org KB preset. Turns the vocabulary-agnostic @leapsight/vitepress-kb
+// schema.org KB preset. Turns the vocabulary-agnostic @leapsight/vitepress-template/kb
 // loader into a blog knowledge graph: BlogPosting / Person / CollectionPage
 // nodes, schema.org object-properties as typed edges, and a SHACL gate.
 
@@ -43,8 +43,14 @@ export function blogContext({ idPrefix, siteNamespace, namespaces = {} }) {
   }
 }
 
-/** Default page classifier for a blog: posts + authors are typed, rest generic. */
-export function makeClassify({ postPathPrefix = '/posts/', authorPathPrefix = '/authors/' } = {}) {
+/** Default page classifier for a blog: posts + authors + glossary terms are
+ *  typed, rest generic. Glossary term pages under `glossaryPathPrefix` become
+ *  `schema:DefinedTerm` nodes so <Concept>/<Glossary> can resolve them. */
+export function makeClassify({
+  postPathPrefix = '/posts/',
+  authorPathPrefix = '/authors/',
+  glossaryPathPrefix = '/glossary/'
+} = {}) {
   return function classify(fm, url) {
     const explicit = fm['@type']
     if (typeof explicit === 'string' && explicit) return { type: explicit, generic: false }
@@ -52,9 +58,16 @@ export function makeClassify({ postPathPrefix = '/posts/', authorPathPrefix = '/
     const isIndex = url.endsWith('/') || /\/index$/.test(url)
     if (url.startsWith(postPathPrefix) && !isIndex) return { type: 'schema:BlogPosting', generic: false }
     if (url.startsWith(authorPathPrefix) && !isIndex) return { type: 'schema:Person', generic: false }
+    if (glossaryPathPrefix && url.startsWith(glossaryPathPrefix) && !isIndex)
+      return { type: 'schema:DefinedTerm', generic: false }
 
-    // Tag/archive/landing pages: link + backlink targets, not a gated surface.
-    if (url.startsWith('/tags/') || url.startsWith(postPathPrefix) || url.startsWith(authorPathPrefix))
+    // Tag/archive/landing/glossary-index pages: link + backlink targets, not gated.
+    if (
+      url.startsWith('/tags/') ||
+      url.startsWith(postPathPrefix) ||
+      url.startsWith(authorPathPrefix) ||
+      (glossaryPathPrefix && url.startsWith(glossaryPathPrefix))
+    )
       return { type: 'schema:CollectionPage', generic: true }
     return { type: 'schema:WebPage', generic: true }
   }
@@ -84,6 +97,7 @@ export function blogKbConfig(options) {
     artifactDir,
     postPathPrefix = '/posts/',
     authorPathPrefix = '/authors/',
+    glossaryPathPrefix = '/glossary/',
     pattern,
     ignore
   } = options
@@ -93,7 +107,7 @@ export function blogKbConfig(options) {
   return {
     context: blogContext({ idPrefix, siteNamespace, namespaces }),
     shapesPath: enforce ? BLOG_SHAPES_PATH : undefined,
-    classify: makeClassify({ postPathPrefix, authorPathPrefix }),
+    classify: makeClassify({ postPathPrefix, authorPathPrefix, glossaryPathPrefix }),
     idPrefix,
     internalPrefixes: [idPrefix],
     externalPrefixes: Object.keys(namespaces),

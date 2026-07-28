@@ -1,5 +1,5 @@
-import { createPostsLoader } from '@leapsight/vitepress-blog/config'
-import type { PostSummary } from '@leapsight/vitepress-blog'
+import { createPostsLoader } from '@leapsight/vitepress-template/blog/config'
+import type { PostSummary } from '@leapsight/vitepress-template/blog'
 
 declare const data: PostSummary[]
 export { data }

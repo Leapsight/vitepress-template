@@ -1,19 +1,20 @@
 <!--
 SPDX-License-Identifier: Apache-2.0
-Intra-series navigation: lists the parts of the current post's series
-(ordered by `seriesOrder`, then date) and marks the current part.
+Intra-series banner: announces that the current post belongs to a series and
+lists every part in order (by `seriesOrder`, else date), marking the current
+one. A post joins a series with `series: "<name>"` in its frontmatter (and an
+optional `seriesOrder: <n>`). Renders nothing unless the series has 2+ parts.
 -->
 <template>
   <nav v-if="parts.length > 1" class="blog-series" aria-label="Series navigation">
-    <div class="series-head">
-      <span class="series-label">Series</span>
-      <span class="series-name">{{ post!.series }}</span>
-      <span class="series-progress">Part {{ currentIndex + 1 }} of {{ parts.length }}</span>
-    </div>
+    <p class="series-intro">
+      This article is <strong>part {{ currentIndex + 1 }} of {{ parts.length }}</strong>
+      in the series <span class="series-name">{{ post!.series }}</span>.
+    </p>
     <ol class="series-list">
       <li v-for="(p, i) in parts" :key="p.url" :class="{ current: i === currentIndex }">
         <a v-if="i !== currentIndex" :href="withBase(p.url)">{{ p.title }}</a>
-        <span v-else>{{ p.title }}</span>
+        <template v-else>{{ p.title }} <span class="series-here">— you’re reading this</span></template>
       </li>
     </ol>
   </nav>
@@ -42,18 +43,21 @@ const currentIndex = computed(() => parts.value.findIndex((p) => p.url === post.
 
 <style scoped>
 .blog-series {
-  margin: 1.5rem 0;
-  padding: 1rem 1.2rem;
+  margin: 0 0 2rem;
+  padding: 1rem 1.25rem;
   border: 1px solid var(--vp-c-divider);
   border-left: 3px solid var(--vp-c-brand-1);
   border-radius: 8px;
   background: var(--vp-c-bg-soft);
+  /* A UI banner — keep the base sans font even inside a serif article. */
+  font-family: var(--vp-font-family-base);
 }
-.series-head { display: flex; align-items: baseline; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
-.series-label { text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.06em; color: var(--vp-c-text-3); }
-.series-name { font-weight: 700; }
-.series-progress { margin-left: auto; font-size: 0.8rem; color: var(--vp-c-text-3); }
-.series-list { margin: 0; padding-left: 1.2rem; }
+.series-intro { margin: 0 0 0.6rem; font-size: 0.95rem; line-height: 1.5; color: var(--vp-c-text-2); }
+.series-name { font-weight: 700; color: var(--vp-c-text-1); }
+.series-list { margin: 0; padding-left: 1.3rem; font-size: 0.95rem; }
+.series-list li { margin: 0.2rem 0; }
 .series-list li.current { color: var(--vp-c-brand-1); font-weight: 600; }
-.series-list a { text-decoration: none; }
+.series-list li.current .series-here { color: var(--vp-c-text-3); font-weight: 400; font-style: italic; }
+.series-list a { color: var(--vp-c-text-1); text-decoration: none; }
+.series-list a:hover { color: var(--vp-c-brand-1); }
 </style>

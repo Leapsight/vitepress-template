@@ -15,3 +15,135 @@
   border-radius: 10px;
   margin: 0 0 1.5rem;
 }
+
+/* Site-wide announcement (<AnnouncementBanner>). Built to look like one row of
+   the post list: a 3-column card (marker | title + excerpt | action) in a
+   rounded, hairline-bordered container below the nav. */
+.announce-bar {
+  padding: 1.25rem 1.5rem 0;
+}
+.announce-inner {
+  position: relative;
+  max-width: 1120px;
+  margin: 0 auto;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 12px;
+  overflow: hidden;
+  font-family: var(--vp-font-family-base);
+}
+.announce-row {
+  display: grid;
+  grid-template-columns: 110px 1fr 190px;
+  gap: 24px;
+  align-items: baseline;
+  padding: 28px 32px;
+  background: var(--vp-c-bg-soft);
+  text-decoration: none;
+  transition: background 0.18s;
+}
+.announce-inner:hover .announce-row {
+  background: var(--vp-c-bg-mute);
+}
+.announce-idx {
+  font-family: var(--vp-font-family-mono, ui-monospace, monospace);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--vp-c-brand-1);
+}
+.announce-cat {
+  display: block;
+  font-family: var(--vp-font-family-mono, ui-monospace, monospace);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--vp-c-text-3);
+}
+.announce-title {
+  margin: 6px 0 8px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--vp-c-text-1);
+}
+.announce-inner:hover .announce-title {
+  color: var(--vp-c-brand-1);
+}
+.announce-excerpt {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: var(--vp-c-text-2);
+  max-width: 62ch;
+}
+.announce-aside {
+  font-family: var(--vp-font-family-mono, ui-monospace, monospace);
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-align: right;
+  color: var(--vp-c-brand-1);
+}
+.announce-x {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 0;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--vp-c-text-3);
+  cursor: pointer;
+  z-index: 1;
+}
+.announce-x:hover {
+  color: var(--vp-c-text-1);
+  background: var(--vp-c-bg);
+}
+@media (max-width: 720px) {
+  .announce-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .announce-aside {
+    text-align: left;
+  }
+}
+
+/* Attributed quotation (<Quote author source>). The inner <blockquote> takes
+   whatever the theme gives blockquotes; we just tighten the figure and style
+   the citation line. */
+.vp-doc .blog-quote {
+  margin: 2.2rem 0;
+}
+.vp-doc .blog-quote blockquote {
+  margin: 0;
+}
+.vp-doc .blog-quote-cite {
+  margin-top: 0.7rem;
+  font-family: var(--vp-font-family-base);
+  font-size: 0.95rem;
+  font-style: normal;
+  color: var(--vp-c-text-3);
+}
+.vp-doc .blog-quote-cite::before {
+  content: '— ';
+}
+.vp-doc .blog-quote-cite .cite-author {
+  font-weight: 600;
+  color: var(--vp-c-text-2);
+}
+.vp-doc .blog-quote-cite cite {
+  font-style: italic;
+}
+.vp-doc .blog-quote-cite a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}

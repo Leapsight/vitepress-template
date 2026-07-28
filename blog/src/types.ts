@@ -13,6 +13,14 @@ export interface PostSummary {
   seriesOrder: number | null
   cover: string | null
   featured: boolean
+  /** Show in the site-wide announcement bar. */
+  announce: boolean
+  /** Announcement bar copy (else the title is used). */
+  announceText: string | null
+  /** Announcement bar link label (else a default). */
+  announceCta: string | null
+  /** ISO end date after which the announcement stops showing (or null). */
+  announceUntil: string | null
   excerpt: string
   readingTime: number
   wordCount: number

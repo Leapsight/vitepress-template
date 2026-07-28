@@ -3,7 +3,7 @@
 // Vocabulary-agnostic KB build-time data-loader factory. A site's
 // `.vitepress/kb.data.ts` does:
 //
-//     import { createKbLoader } from '@leapsight/vitepress-kb/loader'
+//     import { createKbLoader } from '@leapsight/vitepress-template/kb/loader'
 //     export default createKbLoader({ ...vocabularyConfig })
 //
 // It walks every content markdown file (via createContentLoader, includeSrc),

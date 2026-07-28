@@ -6,7 +6,7 @@ feature: true
 draft: true
 ---
 
-Every component on this page ships with `@leapsight/vitepress-theme`
+Every component on this page ships with `@leapsight/vitepress-template/theme`
 and is registered globally — use it in any markdown file. (This page
 also has `draft: true`, hence the watermark.)
 

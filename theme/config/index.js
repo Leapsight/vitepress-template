@@ -1,10 +1,10 @@
 /**
- * @leapsight/vitepress-theme/config — node-side config kit.
+ * @leapsight/vitepress-template/theme/config — node-side config kit.
  *
  * Usage in a site's `.vitepress/config.ts`:
  *
  *   import { defineConfig } from 'vitepress'
- *   import { withThemeDefaults, buildContentSidebar } from '@leapsight/vitepress-theme/config'
+ *   import { withThemeDefaults, buildContentSidebar } from '@leapsight/vitepress-template/theme/config'
  *
  *   export default defineConfig(withThemeDefaults({
  *     title: 'My Site',
@@ -19,7 +19,7 @@ import { applyMarkdown } from './markdown.js'
 export { applyMarkdown } from './markdown.js'
 export { buildContentSidebar, humanize } from './sidebar.js'
 
-const THEME_PKG = '@leapsight/vitepress-theme'
+const THEME_PKG = '@leapsight/vitepress-template'
 
 /**
  * Merge sensible defaults with a site's config:

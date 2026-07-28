@@ -2,7 +2,7 @@
 //
 // Blog post-metadata loader. A site's `.vitepress/posts.data.ts` does:
 //
-//     import { createPostsLoader } from '@leapsight/vitepress-blog/config'
+//     import { createPostsLoader } from '@leapsight/vitepress-template/blog/config'
 //     export default createPostsLoader({ pattern: 'posts/*.md' })
 //
 // It emits a date-sorted array of post summaries consumed by the listing,
@@ -12,7 +12,7 @@
 import { createContentLoader } from 'vitepress'
 import readingTime from 'reading-time'
 import { validatePostFrontmatter } from './frontmatter.js'
-import { stripFrontmatter } from '@leapsight/vitepress-kb/lib/extract.js'
+import { stripFrontmatter } from '@leapsight/vitepress-template/kb/lib/extract.js'
 
 function toArray(v) {
   if (v == null) return []
@@ -37,11 +37,17 @@ function deriveExcerpt(src, limit = 200) {
  * @param {{
  *   pattern?: string,
  *   ignore?: string[],
- *   excerptLength?: number
+ *   excerptLength?: number,
+ *   dateLocale?: string
  * }} [options]
  */
 export function createPostsLoader(options = {}) {
-  const { pattern = 'posts/*.md', ignore = ['**/node_modules/**'], excerptLength = 200 } = options
+  const {
+    pattern = 'posts/*.md',
+    ignore = ['**/node_modules/**'],
+    excerptLength = 200,
+    dateLocale = 'en-GB'
+  } = options
 
   return createContentLoader(pattern, {
     includeSrc: true,
@@ -56,12 +62,28 @@ export function createPostsLoader(options = {}) {
         const src = p.src ?? ''
         const rt = readingTime(stripFrontmatter(src))
 
+        // Announcement lifetime → an absolute end date (ISO). Explicit
+        // `announceUntil` wins; otherwise `date` + `announceWeeks` (default 4).
+        let announceUntil = null
+        if (fm.announce === true) {
+          if (fm.announceUntil) announceUntil = new Date(fm.announceUntil).toISOString()
+          else if (fm.date) {
+            const weeks = typeof fm.announceWeeks === 'number' ? fm.announceWeeks : 4
+            announceUntil = new Date(new Date(fm.date).getTime() + weeks * 7 * 86400000).toISOString()
+          }
+        }
+
         posts.push({
           url: p.url,
           title: fm.title ?? p.url,
           date: fm.date ? new Date(fm.date).toISOString() : null,
           dateFormatted: fm.date
-            ? new Date(fm.date).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' })
+            ? new Date(fm.date).toLocaleDateString(dateLocale, {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                timeZone: 'UTC'
+              })
             : '',
           tags: toArray(fm.tags),
           authors: toArray(fm.author),
@@ -70,6 +92,10 @@ export function createPostsLoader(options = {}) {
           seriesOrder: typeof fm.seriesOrder === 'number' ? fm.seriesOrder : null,
           cover: fm.cover ?? null,
           featured: fm.featured === true,
+          announce: fm.announce === true,
+          announceText: typeof fm.announceText === 'string' ? fm.announceText : null,
+          announceCta: typeof fm.announceCta === 'string' ? fm.announceCta : null,
+          announceUntil,
           excerpt: fm.description ?? fm.excerpt ?? deriveExcerpt(src, excerptLength),
           readingTime: Math.max(1, Math.round(rt.minutes)),
           wordCount: rt.words

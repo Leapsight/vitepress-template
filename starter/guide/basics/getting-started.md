@@ -17,8 +17,8 @@ because it declares `feature: true` it also appears as a card on the
 ## Create a new site
 
 1. Copy the `starter/` package into a new repository.
-2. Point the `@leapsight/vitepress-theme` dependency at the published
-   package (or a git URL).
+2. Point the `@leapsight/vitepress-template` dependency at a git URL
+   (or a published version, if you've published one).
 3. Edit `.vitepress/config.ts` (title, nav, sidebar sections) and
    `.vitepress/theme/brand.css` (colors, fonts).
 4. Write markdown.

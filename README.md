@@ -9,29 +9,34 @@ components, layout and config machinery, changing only **content** and
 
 | Path | What it is |
 | ---- | ---------- |
-| `theme/` | `@leapsight/vitepress-theme` — the shared package: layout, Vue components, structural CSS, and a node-side config kit. |
-| `kb/` | `@leapsight/vitepress-kb` — vocabulary-agnostic RDF knowledge-graph layer: build-time loader, CURIE ontology, SHACL gate, typed-edge markdown, backlinks + graph-view, JSON-LD emitter. Optional; docs or blog sites opt in. |
-| `blog/` | `@leapsight/vitepress-blog` — blog features on top of KB: schema.org `BlogPosting` preset, post/taxonomy/archive/series components, pagination, reading progress, Zod frontmatter, RSS/Atom/JSON feeds, JSON-LD + OG meta. |
+| `theme/` | `@leapsight/vitepress-template/theme` — the shared package: layout, Vue components, structural CSS, and a node-side config kit. |
+| `kb/` | `@leapsight/vitepress-template/kb` — vocabulary-agnostic RDF knowledge-graph layer: build-time loader, CURIE ontology, SHACL gate, typed-edge markdown, backlinks + graph-view, JSON-LD emitter. Optional; docs or blog sites opt in. |
+| `blog/` | `@leapsight/vitepress-template/blog` — blog features on top of KB: schema.org `BlogPosting` preset, post/taxonomy/archive/series components, pagination, reading progress, Zod frontmatter, RSS/Atom/JSON feeds, JSON-LD + OG meta. |
 | `starter/` | Copyable **docs** starter site (theme only). |
 | `blog-starter/` | Copyable **blog** starter site (theme + kb + blog): posts, tags, authors, archive, a live graph, feeds, and cross-site `@id` references. |
 
-The three packages compose: a plain docs site needs only `theme`; a
-knowledge-graphed docs site adds `kb`; a blog adds `kb` + `blog`.
+The three parts compose: a plain docs site needs only `theme`; a
+knowledge-graphed docs site adds `kb`; a blog adds `kb` + `blog`. All
+three ship as subpaths of one package, `@leapsight/vitepress-template`
+— there is nothing to publish to consume it, since the whole repo
+(not a subdirectory of it) is the package.
 
 ## Creating a new site
 
 1. Copy `starter/` into a new repository.
-2. Change the `@leapsight/vitepress-theme` dependency from `*` to the
-   published version, or a git URL:
+2. Point the `@leapsight/vitepress-template` dependency at a git URL
+   (or a published version, if you've published one):
 
    ```json
    "dependencies": {
-     "@leapsight/vitepress-theme": "github:leapsight/vitepress-template#path:/theme"
+     "@leapsight/vitepress-template": "github:leapsight/vitepress-template"
    }
    ```
 
-   (Until the package is published, `npm pack` in `theme/` and install
-   the tarball, or use this repo as an npm workspace.)
+   Then import whichever parts you need by subpath:
+   `@leapsight/vitepress-template/theme`,
+   `@leapsight/vitepress-template/theme/config`,
+   `@leapsight/vitepress-template/kb`, `@leapsight/vitepress-template/blog`, etc.
 3. Edit `.vitepress/config.ts` — title, description, nav, sidebar
    sections, versions, metadata, social/edit/footer links.
 4. Edit `.vitepress/theme/brand.css` — colors and fonts. This is the
@@ -92,7 +97,7 @@ Definition lists, footnotes, task lists, optional KaTeX; containers
 `::: button URL`; a `v-pre` rule so inline code with `{{ }}` never
 breaks Vue; H1 injection from frontmatter `title:`.
 
-### Config kit (`@leapsight/vitepress-theme/config`)
+### Config kit (`@leapsight/vitepress-template/theme/config`)
 
 - `withThemeDefaults(config, opts)` — clean URLs, local search,
   markdown kit and `ssr.noExternal` wiring, deep-merged under your
@@ -128,6 +133,8 @@ To serve under a sub-path, set `DOCS_BASE=/subpath/` at build time.
 
 ## Developing the theme itself
 
-This repo is an npm workspace: the starter resolves the theme locally,
-so `npm run dev` at the root exercises theme changes live. Bump
-`theme/package.json` version and publish to roll changes out to sites.
+This repo is an npm workspace: `starter` and `blog-starter` depend on
+`@leapsight/vitepress-template` via a `file:..` link, so `npm run dev`
+(or `npm run dev:blog`) at the root exercises changes live. Bump the
+root `package.json` version and tag a release (or publish it, if you've
+set that up) to roll changes out to external sites.

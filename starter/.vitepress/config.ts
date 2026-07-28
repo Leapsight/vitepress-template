@@ -1,7 +1,7 @@
 import { fileURLToPath } from 'node:url'
 import { dirname, resolve } from 'node:path'
 import { defineConfig } from 'vitepress'
-import { withThemeDefaults, buildContentSidebar } from '@leapsight/vitepress-theme/config'
+import { withThemeDefaults, buildContentSidebar } from '@leapsight/vitepress-template/theme/config'
 
 // VitePress source root (this site keeps content at the package root).
 const SRC = resolve(dirname(fileURLToPath(import.meta.url)), '..')

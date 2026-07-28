@@ -23,7 +23,7 @@ pure shared-tag ranking when the KB graph isn't wired.
 import { computed } from 'vue'
 import { withBase, useData, useRoute } from 'vitepress'
 import { usePosts, useCurrentPost } from '../composables'
-import { useKbData } from '@leapsight/vitepress-kb'
+import { useKbData } from '@leapsight/vitepress-template/kb'
 
 const props = withDefaults(defineProps<{ limit?: number }>(), { limit: 4 })
 
@@ -86,7 +86,9 @@ const related = computed(() => {
   padding-top: 1.5rem;
   border-top: 1px solid var(--vp-c-divider);
 }
-.blog-related-title { font-size: 1rem; margin: 0 0 0.5rem; }
+/* the aside already draws the separator; neutralise the border/padding
+   VitePress's `.vp-doc h2` would otherwise add (which reads as a 2nd ruler) */
+.blog-related-title { font-size: 1rem; margin: 0 0 0.5rem; border-top: 0; padding-top: 0; }
 .blog-related ul { list-style: none; padding: 0; margin: 0; }
 .blog-related li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.3rem 0; }
 .blog-related a { text-decoration: none; }

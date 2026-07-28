@@ -15,7 +15,7 @@
 # (schema:name, mapped from frontmatter `title` by the JSON-LD context).
 schema:NodeShape
     a sh:NodeShape ;
-    sh:targetClass schema:BlogPosting, schema:Article, schema:Person, schema:CollectionPage ;
+    sh:targetClass schema:BlogPosting, schema:Article, schema:Person, schema:CollectionPage, schema:DefinedTerm ;
     sh:property [
         sh:path schema:name ;
         sh:minCount 1 ;

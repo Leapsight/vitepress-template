@@ -1,11 +1,11 @@
 # Blogging
 
-Blog capability is two packages layered on the theme:
+Blog capability is two parts of `@leapsight/vitepress-template`, layered on the theme:
 
-- **`@leapsight/vitepress-kb`** — the vocabulary-agnostic knowledge-graph layer
+- **`@leapsight/vitepress-template/kb`** — the vocabulary-agnostic knowledge-graph layer
   (loader, ontology, SHACL gate, typed edges, backlinks, graph view). See
   [KNOWLEDGE-GRAPH.md](./KNOWLEDGE-GRAPH.md).
-- **`@leapsight/vitepress-blog`** — blog features on top of it: a schema.org
+- **`@leapsight/vitepress-template/blog`** — blog features on top of it: a schema.org
   preset for the KB layer, post/taxonomy/archive components, feeds, JSON-LD +
   OG meta, and Zod-validated frontmatter.
 
@@ -18,8 +18,8 @@ Four files, all present in `blog-starter/`:
 
 **`.vitepress/posts.data.ts`** — the post index:
 ```ts
-import { createPostsLoader } from '@leapsight/vitepress-blog/config'
-import type { PostSummary } from '@leapsight/vitepress-blog'
+import { createPostsLoader } from '@leapsight/vitepress-template/blog/config'
+import type { PostSummary } from '@leapsight/vitepress-template/blog'
 declare const data: PostSummary[]
 export { data }
 export default createPostsLoader({ pattern: 'posts/*.md' })
@@ -27,8 +27,8 @@ export default createPostsLoader({ pattern: 'posts/*.md' })
 
 **`.vitepress/kb.data.ts`** — the knowledge graph (schema.org preset):
 ```ts
-import { createKbLoader } from '@leapsight/vitepress-kb/loader'
-import { blogKbConfig } from '@leapsight/vitepress-blog/config'
+import { createKbLoader } from '@leapsight/vitepress-template/kb/loader'
+import { blogKbConfig } from '@leapsight/vitepress-template/blog/config'
 export default createKbLoader(blogKbConfig({
   siteNamespace: 'https://blog.example.com/kb/',
   idPrefix: 'post',
@@ -39,9 +39,9 @@ export default createKbLoader(blogKbConfig({
 
 **`.vitepress/theme/index.ts`** — compose theme → blog → KB:
 ```ts
-import Theme from '@leapsight/vitepress-theme'
-import { withKb } from '@leapsight/vitepress-kb'
-import { withBlog, blogKbUi } from '@leapsight/vitepress-blog'
+import Theme from '@leapsight/vitepress-template/theme'
+import { withKb } from '@leapsight/vitepress-template/kb'
+import { withBlog, blogKbUi } from '@leapsight/vitepress-template/blog'
 import { data as kbData } from '../kb.data'
 import { data as posts } from '../posts.data'
 import './brand.css'
@@ -53,10 +53,12 @@ export default withKb(withBlog(Theme, posts), kbData, blogKbUi)
 export default defineConfig(withThemeDefaults(withKbDefaults({
   title: 'Acme Blog',
   transformPageData: blogTransformPageData({ hostname, siteNamespace, organization }),
-  async buildEnd(cfg) { await emitFeeds(cfg, { hostname, pattern: 'posts/*.md' }) },
-  vite: { ssr: { noExternal: ['@leapsight/vitepress-kb', '@leapsight/vitepress-blog'] } }
+  async buildEnd(cfg) { await emitFeeds(cfg, { hostname, pattern: 'posts/*.md' }) }
 }, { context: blogContext({ idPrefix, siteNamespace, namespaces }) })))
 ```
+`withThemeDefaults` already wires `vite.ssr.noExternal` for the whole
+`@leapsight/vitepress-template` package (theme, kb, and blog alike, since
+they're one package now) — no need to add it yourself.
 
 ## Frontmatter contract
 

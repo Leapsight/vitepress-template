@@ -3,9 +3,9 @@
 //   withBlog  registers post/taxonomy components + provides the posts index
 //   withKb    registers backlinks/graph, provides the graph, mounts backlinks
 //
-import Theme from '@leapsight/vitepress-theme'
-import { withKb } from '@leapsight/vitepress-kb'
-import { withBlog, blogKbUi } from '@leapsight/vitepress-blog'
+import Theme from '@leapsight/vitepress-template/theme'
+import { withKb } from '@leapsight/vitepress-template/kb'
+import { withBlog, blogKbUi } from '@leapsight/vitepress-template/blog'
 import { data as kbData } from '../kb.data'
 import { data as posts } from '../posts.data'
 import './brand.css'

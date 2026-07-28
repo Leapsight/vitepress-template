@@ -1,14 +1,65 @@
 {
-  "name": "leapsight-vitepress-template",
+  "name": "@leapsight/vitepress-template",
+  "version": "0.1.0",
+  "description": "Leapsight shared VitePress toolkit: theme (layout, components, config kit), kb (RDF knowledge-graph layer), and blog (schema.org blogging on top of kb), as subpaths of one installable package. See starter/ and blog-starter/ for copyable site templates.",
   "private": true,
+  "license": "Apache-2.0",
   "type": "module",
   "engines": {
     "node": ">=20"
   },
+  "exports": {
+    ".": "./theme/src/index.ts",
+    "./theme": "./theme/src/index.ts",
+    "./theme/config": "./theme/config/index.js",
+    "./theme/styles/*": "./theme/src/styles/*",
+    "./kb": "./kb/src/index.ts",
+    "./kb/loader": "./kb/config/loader.js",
+    "./kb/config": "./kb/config/index.js",
+    "./kb/lib/*": "./kb/lib/*",
+    "./kb/styles/*": "./kb/src/styles/*",
+    "./blog": "./blog/src/index.ts",
+    "./blog/kb": "./blog/config/kb-preset.js",
+    "./blog/config": "./blog/config/index.js",
+    "./blog/ontology/*": "./blog/ontology/*",
+    "./blog/styles/*": "./blog/src/styles/*"
+  },
+  "files": [
+    "theme/src",
+    "theme/config",
+    "kb/src",
+    "kb/config",
+    "kb/lib",
+    "blog/src",
+    "blog/config",
+    "blog/ontology"
+  ],
+  "peerDependencies": {
+    "vitepress": "^1.5.0",
+    "vue": "^3.4.0"
+  },
+  "dependencies": {
+    "markdown-it": "^14.1.0",
+    "markdown-it-container": "^4.0.0",
+    "markdown-it-deflist": "^3.0.0",
+    "markdown-it-footnote": "^4.0.0",
+    "markdown-it-katex": "^2.0.3",
+    "markdown-it-task-lists": "^2.1.1",
+    "medium-zoom": "^1.1.0",
+    "jsonld": "^8.3.3",
+    "rdf-validate-shacl": "^0.6.5",
+    "@zazuko/env-node": "^3.0.0",
+    "feed": "^4.2.2",
+    "reading-time": "^1.5.0",
+    "zod": "^3.23.8",
+    "gray-matter": "^4.0.3"
+  },
+  "optionalDependencies": {
+    "graphology": "^0.26.0",
+    "graphology-layout-forceatlas2": "^0.10.1",
+    "sigma": "^3.0.3"
+  },
   "workspaces": [
-    "theme",
-    "kb",
-    "blog",
     "starter",
     "blog-starter"
   ],

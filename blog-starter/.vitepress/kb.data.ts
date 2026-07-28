@@ -1,8 +1,8 @@
 import { fileURLToPath } from 'node:url'
 import { dirname, resolve } from 'node:path'
-import { createKbLoader } from '@leapsight/vitepress-kb/loader'
-import type { KbData } from '@leapsight/vitepress-kb'
-import { blogKbConfig } from '@leapsight/vitepress-blog/config'
+import { createKbLoader } from '@leapsight/vitepress-template/kb/loader'
+import type { KbData } from '@leapsight/vitepress-template/kb'
+import { blogKbConfig } from '@leapsight/vitepress-template/blog/config'
 
 const ARTIFACT_DIR = resolve(dirname(fileURLToPath(import.meta.url)), '../public/kb')
 

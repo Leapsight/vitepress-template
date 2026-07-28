@@ -1,4 +1,4 @@
-# Knowledge graph (`@leapsight/vitepress-kb`)
+# Knowledge graph (`@leapsight/vitepress-template/kb`)
 
 A build-time RDF knowledge graph over your markdown. Every page becomes a
 node; links between pages become **typed, machine-readable edges**. The same

@@ -1,15 +1,15 @@
 /**
- * @leapsight/vitepress-theme — shared client theme.
+ * @leapsight/vitepress-template/theme — shared client theme.
  *
  * Use from a site's `.vitepress/theme/index.ts`:
  *
- *   import Theme from '@leapsight/vitepress-theme'
+ *   import Theme from '@leapsight/vitepress-template/theme'
  *   import './brand.css'   // per-site token overrides
  *   export default Theme
  *
  * or extend it further (extra components, wrapped layout, ...):
  *
- *   import Theme from '@leapsight/vitepress-theme'
+ *   import Theme from '@leapsight/vitepress-template/theme'
  *   export default {
  *     extends: Theme,
  *     enhanceApp({ app }) { app.component('MyThing', MyThing) }
@@ -31,6 +31,9 @@ import Pill from './components/Pill.vue'
 import SiteMeta from './components/SiteMeta.vue'
 import NavbarVersion from './components/NavbarVersion.vue'
 import BackToTop from './components/BackToTop.vue'
+import NewsletterForm from './components/NewsletterForm.vue'
+import ZulipChannelView from './components/ZulipChannelView.vue'
+import ZulipChannels from './components/ZulipChannels.vue'
 
 import './styles/vars.css'
 import './styles/base.css'
@@ -49,7 +52,10 @@ export {
   Pill,
   SiteMeta,
   NavbarVersion,
-  BackToTop
+  BackToTop,
+  NewsletterForm,
+  ZulipChannelView,
+  ZulipChannels
 }
 
 const theme: Theme = {
@@ -67,6 +73,9 @@ const theme: Theme = {
     app.component('ZoomImg', ZoomImg)
     app.component('Pill', Pill)
     app.component('SiteMeta', SiteMeta)
+    app.component('NewsletterForm', NewsletterForm)
+    app.component('ZulipChannelView', ZulipChannelView)
+    app.component('ZulipChannels', ZulipChannels)
   }
 }
 

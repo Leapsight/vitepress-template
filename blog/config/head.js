@@ -4,7 +4,7 @@
 // ⇄ Organization ⇄ WebSite) plus Open Graph / Twitter meta and a canonical
 // link. Wire into a site's `transformPageData`:
 //
-//     import { blogTransformPageData } from '@leapsight/vitepress-blog/config'
+//     import { blogTransformPageData } from '@leapsight/vitepress-template/blog/config'
 //     transformPageData: blogTransformPageData({
 //       hostname: 'https://blog.example.com',
 //       siteNamespace: 'https://blog.example.com/kb/',
@@ -15,8 +15,8 @@
 // `about`/`mentions` carry the @id URIs of whatever the post links to,
 // including cross-site references into a docs namespace.
 
-import { injectJsonLd } from '@leapsight/vitepress-kb/config'
-import { buildOntology } from '@leapsight/vitepress-kb/config'
+import { injectJsonLd } from '@leapsight/vitepress-template/kb/config'
+import { buildOntology } from '@leapsight/vitepress-template/kb/config'
 import { blogContext } from './kb-preset.js'
 
 function toArray(v) {
