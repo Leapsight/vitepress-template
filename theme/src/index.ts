@@ -27,6 +27,7 @@ import SectionFeatures from './components/SectionFeatures.vue'
 import CardGrid from './components/CardGrid.vue'
 import DataTreeView from './components/DataTreeView.vue'
 import ZoomImg from './components/ZoomImg.vue'
+import ZoomSvg from './components/ZoomSvg.vue'
 import Pill from './components/Pill.vue'
 import SiteMeta from './components/SiteMeta.vue'
 import NavbarVersion from './components/NavbarVersion.vue'
@@ -49,6 +50,7 @@ export {
   CardGrid,
   DataTreeView,
   ZoomImg,
+  ZoomSvg,
   Pill,
   SiteMeta,
   NavbarVersion,
@@ -71,6 +73,7 @@ const theme: Theme = {
     app.component('CardGrid', CardGrid)
     app.component('DataTreeView', DataTreeView)
     app.component('ZoomImg', ZoomImg)
+    app.component('ZoomSvg', ZoomSvg)
     app.component('Pill', Pill)
     app.component('SiteMeta', SiteMeta)
     app.component('NewsletterForm', NewsletterForm)
