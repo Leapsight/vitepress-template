@@ -11,8 +11,14 @@ config:
 
 Rendering modes:
   - One version  → static brand-tinted badge (`v1.2.0`).
-  - Several      → dropdown with the current version marked; other
-                   versions link to `link` if given, else `/v<x>/`.
+  - Several      → dropdown with the current version marked. Each entry
+                   links to `link` if given, else `/` for the current
+                   version and `/v<x>/` for the rest.
+
+Targets are absolute from the site root and are deliberately not passed
+through withBase(): every version is a separate deployment with its own
+base, so an archived build would otherwise prefix its siblings' paths
+with its own and 404.
 
 Mounted automatically via the theme Layout's `nav-bar-content-after`
 slot; renders nothing when `versions` is absent or empty.
@@ -58,13 +64,13 @@ slot; renders nothing when `versions` is absent or empty.
 
 <script setup lang="ts">
 import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
-import { useData, withBase } from 'vitepress'
+import { useData } from 'vitepress'
 
 export interface VersionEntry {
   version: string
   label: string
   current?: boolean
-  /** Optional explicit target; defaults to `/v<version>/`. */
+  /** Optional explicit target; defaults to `/` when current, `/v<version>/` otherwise. */
   link?: string
 }
 
@@ -78,8 +84,13 @@ const current = computed<VersionEntry>(
 const hasAny = computed(() => versions.value.length > 0)
 const multiple = computed(() => versions.value.length > 1)
 
+// Version links are absolute from the site root and must NOT go through
+// withBase(). Each version is its own deployment with its own base: an
+// archived build has base `/v<its version>/`, so withBase() would turn a
+// sibling's `/v<other>/` into `/v<its version>/v<other>/` and 404. The
+// current version is served at the root, not at `/v<version>/`.
 function versionHref(v: VersionEntry): string {
-  return withBase(v.link ?? `/v${v.version}/`)
+  return v.link ?? (v.current ? '/' : `/v${v.version}/`)
 }
 
 const isOpen = ref(false)
