@@ -2,6 +2,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import mediumZoom from 'medium-zoom'
+import { applyBase } from '../lib/apply-base'
 
 defineProps<{
   src: string
@@ -19,7 +20,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <img class="zoom-img" ref="imgRef" :src="src" :alt="alt" :width="width" />
+  <img class="zoom-img" ref="imgRef" :src="applyBase(src)" :alt="alt" :width="width" />
 </template>
 
 <style>

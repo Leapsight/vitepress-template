@@ -19,7 +19,7 @@ across viewport widths via `repeat(auto-fill, minmax(260px, 1fr))`.
 </template>
 
 <script setup lang="ts">
-import { withBase } from 'vitepress'
+import { applyBase } from '../lib/apply-base'
 
 export interface Card {
   title: string
@@ -28,16 +28,6 @@ export interface Card {
 }
 
 defineProps<{ cards: Card[] }>()
-
-// Internal absolute URLs (`/foo/bar`) need the VitePress `base`
-// prefix when the site is served under a sub-path. External URLs
-// and bare hash anchors pass through unchanged.
-function applyBase(link: string): string {
-  if (!link) return link
-  if (/^(?:https?:\/\/|mailto:|#)/.test(link)) return link
-  if (link.startsWith('/')) return withBase(link)
-  return link
-}
 </script>
 
 <style scoped>

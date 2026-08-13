@@ -22,6 +22,7 @@
 -->
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { applyBase } from '../lib/apply-base'
 
 const props = withDefaults(
   defineProps<{
@@ -147,7 +148,7 @@ function toggleFullscreen() {
 
 onMounted(async () => {
   try {
-    const res = await fetch(props.src)
+    const res = await fetch(applyBase(props.src))
     if (!res.ok) throw new Error(`${res.status} ${res.statusText}`)
     const text = await res.text()
 
@@ -210,7 +211,7 @@ onBeforeUnmount(() => {
       @keydown="onKey"
     >
       <!-- Server-rendered and pre-hydration; replaced by the inline SVG. -->
-      <img v-if="!ready" class="zoom-svg__fallback" :src="src" :alt="alt" />
+      <img v-if="!ready" class="zoom-svg__fallback" :src="applyBase(src)" :alt="alt" />
       <div class="zoom-svg__canvas" />
 
       <div v-if="ready" class="zoom-svg__controls" role="group" aria-label="Diagram zoom">
@@ -218,7 +219,7 @@ onBeforeUnmount(() => {
         <button type="button" title="Zoom in (+)" @click="zoomBy(1.3)">+</button>
         <button type="button" title="Reset (0)" @click="reset">⤢</button>
         <button type="button" title="Fullscreen" @click="toggleFullscreen">⛶</button>
-        <a :href="src" target="_blank" rel="noopener" title="Open the .svg in a new tab">↗</a>
+        <a :href="applyBase(src)" target="_blank" rel="noopener" title="Open the .svg in a new tab">↗</a>
       </div>
 
       <span v-if="ready" class="zoom-svg__zoom" aria-hidden="true">{{ zoom.toFixed(1) }}×</span>

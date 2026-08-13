@@ -1,5 +1,7 @@
 <!-- Single feature card. Usually rendered via <Features>. -->
 <script setup lang="ts">
+import { applyBase } from '../lib/apply-base'
+
 defineProps<{
   icon?: string
   type?: string
@@ -11,7 +13,7 @@ defineProps<{
 </script>
 
 <template>
-  <a :href="link" class="feature-link">
+  <a :href="applyBase(link)" class="feature-link">
     <article class="Feature">
       <div v-if="icon" class="icon">{{ icon }}</div>
       <span v-if="type" class="type">{{ type }}</span>
