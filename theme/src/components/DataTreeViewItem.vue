@@ -70,6 +70,7 @@
 import { computed, defineComponent, reactive } from 'vue'
 import type { PropType } from 'vue'
 import MarkdownIt from 'markdown-it'
+import { applyBase } from '../lib/apply-base'
 import Container from 'markdown-it-container'
 import slugify from '../lib/slugify'
 
@@ -148,6 +149,21 @@ export default defineComponent({
 
     // Descriptions may carry markdown (including `::: info` blocks).
     const md = new MarkdownIt()
+
+    // This is a standalone markdown-it instance, so VitePress never sees its
+    // links and never applies the site `base` to them: a description saying
+    // `[user](/reference/wamp_api/user)` rendered that href verbatim and 404'd
+    // on any sub-path deployment. applyBase() leaves external URLs, relative
+    // paths and bare hash anchors alone.
+    const renderLinkOpen =
+      md.renderer.rules.link_open ??
+      ((tokens: any[], idx: number, opts: any, _env: any, self: any) =>
+        self.renderToken(tokens, idx, opts))
+    md.renderer.rules.link_open = (tokens: any[], idx: number, opts: any, env: any, self: any) => {
+      const href = tokens[idx].attrGet('href')
+      if (href) tokens[idx].attrSet('href', applyBase(href))
+      return renderLinkOpen(tokens, idx, opts, env, self)
+    }
     md.use(Container, 'info', {
       validate: (params: string) => params.trim().match(/^info(?:\s.+)?$/),
       render: (tokens: any[], idx: number) => {

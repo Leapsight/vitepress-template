@@ -30,7 +30,7 @@ import mdContainer from 'markdown-it-container'
  * }} [options]
  */
 export function applyMarkdown(md, options = {}) {
-  const { math = false, vPreCode = true, injectTitle = true, containers = true } = options
+  const { math = false, vPreCode = true, injectTitle = true, containers = true, base = '/' } = options
 
   md.use(mdDeflist)
   md.use(mdFootnote)
@@ -41,7 +41,7 @@ export function applyMarkdown(md, options = {}) {
   }
 
   if (containers) {
-    registerContainers(md)
+    registerContainers(md, base)
   }
 
   if (vPreCode) {
@@ -78,7 +78,27 @@ export function applyMarkdown(md, options = {}) {
 }
 
 /** @param {import('markdown-it')} md */
-function registerContainers(md) {
+/**
+ * Prefix a root-absolute URL with the site's `base`.
+ *
+ * Containers that emit raw HTML bypass VitePress's own link handling — it
+ * rewrites markdown-it `link_open` tokens, not HTML strings — so a
+ * `::: button /about/contributors` came out base-less and 404'd on any
+ * sub-path deployment.
+ *
+ * The semantics match VitePress's client-side withBase(): external URLs and
+ * anything not starting with `/` (relative paths, bare hash anchors) pass
+ * through untouched. This has to be a separate implementation because
+ * withBase() reads client site data and this runs in Node at build time.
+ */
+function joinBase(base, link) {
+  if (!link) return link
+  if (/^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(link)) return link
+  if (!link.startsWith('/')) return link
+  return base.replace(/\/$/, '') + link
+}
+
+function registerContainers(md, base = '/') {
   // ::: tabs [code]  →  <Tabs class="code?">
   md.use(mdContainer, 'tabs', {
     render(tokens, idx) {
@@ -137,8 +157,9 @@ function registerContainers(md) {
     render(tokens, idx) {
       if (tokens[idx].nesting === 1) {
         const m = tokens[idx].info.trim().match(/^button\s+(.*)$/)
-        const href = md.utils.escapeHtml(m[1])
-        const target = href.startsWith('http') ? ' target="_blank" rel="noreferrer"' : ''
+        const raw = m[1].trim()
+        const href = md.utils.escapeHtml(joinBase(base, raw))
+        const target = raw.startsWith('http') ? ' target="_blank" rel="noreferrer"' : ''
         return `<div class="action"><a class="ls-button big alt" href="${href}"${target}>`
       }
       return '</a></div>\n'

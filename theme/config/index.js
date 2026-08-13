@@ -48,7 +48,10 @@ export function withThemeDefaults(userConfig = {}, opts = {}) {
     markdown: {
       ...userMarkdown,
       config(md) {
-        applyMarkdown(md, opts.markdown)
+        // The site's own `base` feeds the containers that emit raw HTML,
+        // which VitePress's link rewriting never sees. An explicit
+        // opts.markdown.base still wins.
+        applyMarkdown(md, { base: userConfig.base ?? '/', ...opts.markdown })
         userMarkdown.config?.(md)
       }
     },
