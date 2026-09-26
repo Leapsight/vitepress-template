@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress'
 import { withThemeDefaults } from '@leapsight/vitepress-template/theme/config'
 import { withKbDefaults } from '@leapsight/vitepress-template/kb/config'
-import { blogContext, blogTransformPageData, emitFeeds } from '@leapsight/vitepress-template/blog/config'
+import { announceTransformPageData, blogContext, blogTransformPageData, emitFeeds } from '@leapsight/vitepress-template/blog/config'
 
 // ---- Site identity ---------------------------------------------------------
 // `siteNamespace` is the IRI base for this site's stable @ids. `namespaces`
@@ -11,6 +11,16 @@ const hostname = 'https://blog.example.com'
 const idPrefix = 'post'
 const siteNamespace = 'https://blog.example.com/kb/'
 const namespaces = { bondydoc: 'https://bondy.io/kb/' }
+
+const seo = blogTransformPageData({
+  hostname,
+  siteNamespace,
+  idPrefix,
+  namespaces,
+  organization: { name: 'Acme', logo: '/logo.svg' },
+  twitterSite: '@acme'
+})
+const announce = announceTransformPageData({ pattern: 'posts/*.md' })
 
 export default defineConfig(
   withThemeDefaults(
@@ -35,15 +45,12 @@ export default defineConfig(
           }
         },
 
-        // Per-page JSON-LD @graph + Open Graph / Twitter meta + canonical.
-        transformPageData: blogTransformPageData({
-          hostname,
-          siteNamespace,
-          idPrefix,
-          namespaces,
-          organization: { name: 'Acme', logo: '/logo.svg' },
-          twitterSite: '@acme'
-        }),
+        // Per-page JSON-LD @graph + Open Graph / Twitter meta + canonical,
+        // and the pre-paint script that picks the <AnnouncementBanner> bar.
+        async transformPageData(pageData, ctx) {
+          await announce(pageData)
+          seo(pageData, ctx)
+        },
 
         // RSS + Atom + JSON feeds, written to the build output.
         async buildEnd(cfg) {

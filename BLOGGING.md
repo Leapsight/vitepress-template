@@ -52,7 +52,10 @@ export default withKb(withBlog(Theme, posts), kbData, blogKbUi)
 ```ts
 export default defineConfig(withThemeDefaults(withKbDefaults({
   title: 'Acme Blog',
-  transformPageData: blogTransformPageData({ hostname, siteNamespace, organization }),
+  async transformPageData(pageData, ctx) {
+    await announce(pageData)   // announceTransformPageData({ pattern: 'posts/*.md' })
+    seo(pageData, ctx)         // blogTransformPageData({ hostname, siteNamespace, organization })
+  },
   async buildEnd(cfg) { await emitFeeds(cfg, { hostname, pattern: 'posts/*.md' }) }
 }, { context: blogContext({ idPrefix, siteNamespace, namespaces }) })))
 ```
@@ -73,6 +76,7 @@ they're one package now) — no need to add it yourself.
 | `cover` | Social/OG image |
 | `featured` | Pin in `<PostList :featured>` |
 | `draft` | Renders in dev, excluded from production build/feed/graph |
+| `announce` (+ `announceText`, `announceCta`, `announceWeeks`, `announceUntil`) | Show in `<AnnouncementBanner>`; needs `announceTransformPageData` wired (see above), which picks the bar before first paint |
 | `canonical` | Overrides the canonical URL |
 | `schema:about`, `schema:mentions`, … | Typed graph edges — see KNOWLEDGE-GRAPH.md |
 

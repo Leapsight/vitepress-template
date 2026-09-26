@@ -13,7 +13,7 @@ export interface PostSummary {
   seriesOrder: number | null
   cover: string | null
   featured: boolean
-  /** Show in the site-wide announcement bar. */
+  /** Announcement-bar candidate: flagged and not yet expired at build time. */
   announce: boolean
   /** Announcement bar copy (else the title is used). */
   announceText: string | null
@@ -21,6 +21,8 @@ export interface PostSummary {
   announceCta: string | null
   /** ISO end date after which the announcement stops showing (or null). */
   announceUntil: string | null
+  /** localStorage key recording a dismissal (null unless `announce`). */
+  announceKey: string | null
   excerpt: string
   readingTime: number
   wordCount: number

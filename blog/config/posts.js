@@ -72,6 +72,11 @@ export function createPostsLoader(options = {}) {
             announceUntil = new Date(new Date(fm.date).getTime() + weeks * 7 * 86400000).toISOString()
           }
         }
+        // Already expired at build time → not a candidate. AnnouncementBanner
+        // server-renders every candidate, so this keeps long-expired ones
+        // out of the HTML; expiry after the build is handled in the browser.
+        const announce =
+          fm.announce === true && (!announceUntil || Date.now() < Date.parse(announceUntil))
 
         posts.push({
           url: p.url,
@@ -92,10 +97,12 @@ export function createPostsLoader(options = {}) {
           seriesOrder: typeof fm.seriesOrder === 'number' ? fm.seriesOrder : null,
           cover: fm.cover ?? null,
           featured: fm.featured === true,
-          announce: fm.announce === true,
+          announce,
           announceText: typeof fm.announceText === 'string' ? fm.announceText : null,
           announceCta: typeof fm.announceCta === 'string' ? fm.announceCta : null,
           announceUntil,
+          // Per-announcement dismissal key: a new end date re-shows it.
+          announceKey: announce ? 'ls-announce:' + p.url + '|' + (announceUntil ?? '') : null,
           excerpt: fm.description ?? fm.excerpt ?? deriveExcerpt(src, excerptLength),
           readingTime: Math.max(1, Math.round(rt.minutes)),
           wordCount: rt.words
