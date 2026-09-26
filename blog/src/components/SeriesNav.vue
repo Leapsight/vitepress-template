@@ -4,17 +4,22 @@ Intra-series banner: announces that the current post belongs to a series and
 lists every part in order (by `seriesOrder`, else date), marking the current
 one. A post joins a series with `series: "<name>"` in its frontmatter (and an
 optional `seriesOrder: <n>`). Renders nothing unless the series has 2+ parts.
+
+Parts that are not published yet (drafts, in a production build) still count
+toward "part X of Y" and appear in the list as forthcoming, without a title
+or link — a draft's title is not final.
 -->
 <template>
-  <nav v-if="parts.length > 1" class="blog-series" aria-label="Series navigation">
+  <nav v-if="post && post.seriesTotal && post.seriesTotal > 1" class="blog-series" aria-label="Series navigation">
     <p class="series-intro">
-      This article is <strong>part {{ currentIndex + 1 }} of {{ parts.length }}</strong>
-      in the series <span class="series-name">{{ post!.series }}</span>.
+      This article is <strong>part {{ post.seriesPart }} of {{ post.seriesTotal }}</strong>
+      in the series <span class="series-name">{{ post.series }}</span>.
     </p>
     <ol class="series-list">
-      <li v-for="(p, i) in parts" :key="p.url" :class="{ current: i === currentIndex }">
-        <a v-if="i !== currentIndex" :href="withBase(p.url)">{{ p.title }}</a>
-        <template v-else>{{ p.title }} <span class="series-here">— you’re reading this</span></template>
+      <li v-for="e in parts" :key="e.part" :class="{ current: e.current, forthcoming: !e.post }">
+        <a v-if="e.post && !e.current" :href="withBase(e.post.url)">{{ e.post.title }}</a>
+        <template v-else-if="e.post">{{ e.post.title }} <span class="series-here">— you’re reading this</span></template>
+        <template v-else>Forthcoming</template>
       </li>
     </ol>
   </nav>
@@ -24,21 +29,23 @@ optional `seriesOrder: <n>`). Renders nothing unless the series has 2+ parts.
 import { computed } from 'vue'
 import { withBase } from 'vitepress'
 import { usePosts, useCurrentPost } from '../composables'
+import type { PostSummary } from '../types'
 
 const posts = usePosts()
 const post = useCurrentPost()
 
+/** One entry per position 1..seriesTotal; `post` is null for an unpublished part. */
 const parts = computed(() => {
-  const s = post.value?.series
-  if (!s) return []
-  return posts
-    .filter((p) => p.series === s)
-    .sort((a, b) => {
-      if (a.seriesOrder != null && b.seriesOrder != null) return a.seriesOrder - b.seriesOrder
-      return (a.date ?? '').localeCompare(b.date ?? '')
-    })
+  const cur = post.value
+  if (!cur?.series || !cur.seriesTotal) return []
+  const byPart = new Map<number, PostSummary>()
+  for (const p of posts) if (p.series === cur.series && p.seriesPart) byPart.set(p.seriesPart, p)
+  return Array.from({ length: cur.seriesTotal }, (_, i) => ({
+    part: i + 1,
+    post: byPart.get(i + 1) ?? null,
+    current: i + 1 === cur.seriesPart
+  }))
 })
-const currentIndex = computed(() => parts.value.findIndex((p) => p.url === post.value?.url))
 </script>
 
 <style scoped>
@@ -60,4 +67,5 @@ const currentIndex = computed(() => parts.value.findIndex((p) => p.url === post.
 .series-list li.current .series-here { color: var(--vp-c-text-3); font-weight: 400; font-style: italic; }
 .series-list a { color: var(--vp-c-text-1); text-decoration: none; }
 .series-list a:hover { color: var(--vp-c-brand-1); }
+.series-list li.forthcoming { color: var(--vp-c-text-3); font-style: italic; }
 </style>

@@ -54,10 +54,31 @@ export function createPostsLoader(options = {}) {
     globOptions: { ignore },
     transform(raw) {
       const posts = []
+      // Every part of every series, drafts included: a series' length and
+      // each part's number count the parts not yet published.
+      const seriesParts = new Map()
+      for (const p of raw) {
+        const fm = p.frontmatter ?? {}
+        if (!fm.series) continue
+        const unpublished = fm.draft === true && process.env.NODE_ENV === 'production'
+        const entry = { url: p.url, order: fm.seriesOrder, date: fm.date ? new Date(fm.date).toISOString() : '', unpublished }
+        seriesParts.set(fm.series, [...(seriesParts.get(fm.series) ?? []), entry])
+      }
+      for (const parts of seriesParts.values()) {
+        parts.sort((a, b) => {
+          if (a.order != null && b.order != null) return a.order - b.order
+          if (a.order != null) return -1
+          if (b.order != null) return 1
+          return a.date.localeCompare(b.date)
+        })
+      }
+
       for (const p of raw) {
         const fm = p.frontmatter ?? {}
         validatePostFrontmatter(fm, p.url)
         if (fm.draft === true && process.env.NODE_ENV === 'production') continue
+
+        const parts = fm.series ? seriesParts.get(fm.series) : null
 
         const src = p.src ?? ''
         const rt = readingTime(stripFrontmatter(src))
@@ -95,6 +116,9 @@ export function createPostsLoader(options = {}) {
           section: fm.section ?? null,
           series: fm.series ?? null,
           seriesOrder: typeof fm.seriesOrder === 'number' ? fm.seriesOrder : null,
+          seriesPart: parts ? parts.findIndex((e) => e.url === p.url) + 1 : null,
+          seriesTotal: parts ? parts.length : null,
+          seriesUnpublished: parts ? parts.flatMap((e, i) => (e.unpublished ? [i + 1] : [])) : [],
           cover: fm.cover ?? null,
           featured: fm.featured === true,
           announce,

@@ -11,6 +11,12 @@ export interface PostSummary {
   section: string | null
   series: string | null
   seriesOrder: number | null
+  /** 1-based position in its series, counting unpublished (draft) parts. */
+  seriesPart: number | null
+  /** Number of parts in its series, published or not. */
+  seriesTotal: number | null
+  /** Positions of the series' parts that are not published (drafts). */
+  seriesUnpublished: number[]
   cover: string | null
   featured: boolean
   /** Announcement-bar candidate: flagged and not yet expired at build time. */
