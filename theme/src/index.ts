@@ -16,6 +16,7 @@
  *   }
  */
 import type { Theme } from 'vitepress'
+import { defineAsyncComponent } from 'vue'
 import DefaultTheme from 'vitepress/theme'
 import Layout from './Layout.vue'
 
@@ -25,7 +26,6 @@ import Feature from './components/Feature.vue'
 import Features from './components/Features.vue'
 import SectionFeatures from './components/SectionFeatures.vue'
 import CardGrid from './components/CardGrid.vue'
-import DataTreeView from './components/DataTreeView.vue'
 import ZoomImg from './components/ZoomImg.vue'
 import ZoomSvg from './components/ZoomSvg.vue'
 import Pill from './components/Pill.vue'
@@ -39,6 +39,11 @@ import ZulipChannels from './components/ZulipChannels.vue'
 import './styles/vars.css'
 import './styles/base.css'
 import './styles/components.css'
+
+// Async: DataTreeViewItem renders descriptions with markdown-it in the
+// browser, so a static import put the parser in every page's theme chunk
+// (~40 KB gzipped on bondy.io) whether or not the page used the component.
+const DataTreeView = defineAsyncComponent(() => import('./components/DataTreeView.vue'))
 
 export {
   Layout,
