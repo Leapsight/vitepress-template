@@ -30,6 +30,11 @@ const THEME_PKG = '@leapsight/vitepress-template'
  *     injection), composed BEFORE the site's own `markdown.config`
  *   - `vite.ssr.noExternal` for the theme package (it ships raw
  *     `.vue`/`.ts` source)
+ *   - `vite.optimizeDeps.exclude` for it too: esbuild's dev pre-bundle
+ *     leaves the `.vue` files out, so they import a second copy of the
+ *     `.ts` modules — a second POSTS_KEY, and every component reading
+ *     posts through inject() (SeriesNav, AnnouncementBanner, …) found
+ *     none under `vitepress dev`. Excluded, there is one module graph.
  *
  * @param {import('vitepress').UserConfig} [userConfig]
  * @param {{ markdown?: Parameters<typeof applyMarkdown>[1] }} [opts]
@@ -66,6 +71,10 @@ export function withThemeDefaults(userConfig = {}, opts = {}) {
       ssr: {
         ...userSsr,
         noExternal: mergeNoExternal(userSsr.noExternal)
+      },
+      optimizeDeps: {
+        ...userVite.optimizeDeps,
+        exclude: [...new Set([THEME_PKG, ...(userVite.optimizeDeps?.exclude ?? [])])]
       }
     }
   }
