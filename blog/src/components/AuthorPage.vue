@@ -7,6 +7,10 @@ Author archive page body. Drop into a dynamic route:
   <div class="blog-authorpage">
     <h1>Posts by {{ name || author }}</h1>
     <p class="count">{{ count }} post{{ count === 1 ? '' : 's' }}</p>
+    <!-- PostList titles are <h3>; this keeps the outline h1 → h2 → h3 for
+         assistive tech without a visible heading or restyling PostList, whose
+         titles would pick up the page's markdown h2 styles as <h2>. -->
+    <h2 class="visually-hidden">All posts</h2>
     <PostList :author="author" />
   </div>
 </template>
@@ -26,4 +30,8 @@ const count = computed(() => posts.filter((p) => p.authors.some((a) => slug(a) =
 
 <style scoped>
 .count { color: var(--vp-c-text-3); margin-top: -0.5rem; }
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
 </style>
