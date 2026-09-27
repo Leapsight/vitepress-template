@@ -73,6 +73,300 @@
   }
 }
 
+/* --- Inline concept links (preview.ts marks them) --------------------------
+   A dotted underline says "this opens a preview", unlike a plain link. */
+.vp-doc a[data-kb-term] {
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+
+/* --- Concept preview card (preview.ts) -------------------------------------
+   A popover in the top layer. Anchored under (or over) its link by inline
+   top/left; at <=768px `.is-sheet` makes it a bottom sheet instead. */
+.kb-preview {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  width: min(22rem, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+  padding: 0.95rem 1.1rem 0.9rem;
+  font-family: var(--vp-font-family-base);
+  line-height: 1.45;
+  color: var(--vp-c-text-1);
+  background: var(--vp-c-bg);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+}
+.kb-preview:focus {
+  outline: none;
+}
+.kb-preview-kind {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--vp-c-text-3);
+}
+.kb-preview-title {
+  margin: 0.2rem 1.8rem 0.45rem 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+.kb-preview-excerpt {
+  margin: 0 0 0.85rem;
+  font-size: 0.92rem;
+  color: var(--vp-c-text-2);
+}
+.kb-preview-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.kb-preview-expand {
+  padding: 0.3rem 0.8rem;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--vp-c-white);
+  background: var(--vp-c-brand-1);
+  border: 1px solid var(--vp-c-brand-1);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.kb-preview-expand:hover {
+  background: var(--vp-c-brand-2);
+  border-color: var(--vp-c-brand-2);
+}
+.kb-preview-open {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--vp-c-brand-1);
+  text-decoration: none;
+}
+.kb-preview-open:hover {
+  text-decoration: underline;
+}
+.kb-preview-close {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.5rem;
+  width: 1.9rem;
+  height: 1.9rem;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--vp-c-text-3);
+  cursor: pointer;
+}
+.kb-preview-close:hover {
+  color: var(--vp-c-text-1);
+  background: var(--vp-c-bg-soft);
+}
+.kb-preview.is-sheet {
+  top: auto;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  max-height: 70vh;
+  padding: 1.2rem 1.25rem calc(1.1rem + env(safe-area-inset-bottom));
+  border-width: 1px 0 0;
+  border-radius: 16px 16px 0 0;
+}
+.kb-preview.is-sheet::backdrop {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* --- Concept panel (preview.ts, after Expand) ------------------------------
+   Fixed on the right, over the page, from --kb-panel-top down (a site with a
+   top bar sets it to the bar's height). Pinned at >=1200px, the body makes
+   room with a right margin; a site that wants only its content to make room
+   (so a top bar keeps its width) overrides that rule, keyed on
+   html.kb-panel-pinned and --kb-panel-width. */
+:root {
+  --kb-panel-width: min(28rem, 34vw);
+  --kb-panel-top: 0px;
+}
+.kb-panel {
+  position: fixed;
+  top: var(--kb-panel-top);
+  right: 0;
+  bottom: 0;
+  z-index: var(--kb-panel-z, 90);
+  display: flex;
+  flex-direction: column;
+  width: var(--kb-panel-width);
+  font-family: var(--vp-font-family-base);
+  color: var(--vp-c-text-1);
+  background: var(--vp-c-bg);
+  border-left: 1px solid var(--vp-c-divider);
+  box-shadow: -12px 0 40px rgba(0, 0, 0, 0.14);
+  visibility: hidden;
+  transform: translateX(100%);
+  transition: transform 0.22s ease, visibility 0s linear 0.22s;
+}
+.kb-panel.is-open {
+  visibility: visible;
+  transform: none;
+  transition: transform 0.22s ease;
+}
+.kb-panel.is-pinned {
+  box-shadow: none;
+}
+@media (max-width: 1199px) {
+  .kb-panel {
+    width: min(28rem, calc(100vw - 48px));
+  }
+  .kb-panel-pin {
+    display: none;
+  }
+}
+@media (min-width: 1200px) {
+  /* VitePress sets body { width: 100% }, which a margin alone overflows. */
+  html.kb-panel-pinned body {
+    width: auto;
+    margin-right: var(--kb-panel-width);
+  }
+  /* The margin is where the panel now is: concept badges drop in-flow. */
+  html.kb-panel-pinned .vp-doc p:has(> .concept-note) {
+    position: static;
+  }
+  html.kb-panel-pinned .concept-note {
+    position: static;
+    width: auto;
+    max-width: 26rem;
+    margin: 0.9rem 0;
+  }
+}
+/* Phones: a sheet from the bottom, leaving a strip of the (dimmed) page in
+   view so it reads as an overlay; a tap there closes it (preview.ts). A site
+   whose fixed top bar stays above overlays sets --kb-sheet-gap to clear it. */
+@media (max-width: 768px) {
+  .kb-panel {
+    top: auto;
+    left: 0;
+    width: 100%;
+    height: calc(100dvh - var(--kb-sheet-gap, 48px));
+    border-left: 0;
+    border-top: 1px solid var(--vp-c-divider);
+    border-radius: 16px 16px 0 0;
+    box-shadow: none;
+    transform: translateY(100%);
+  }
+  .kb-panel.is-open {
+    box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.3);
+  }
+  .kb-panel-body {
+    padding-bottom: calc(2.5rem + env(safe-area-inset-bottom));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kb-panel,
+  .kb-panel.is-open {
+    transition: none;
+  }
+}
+.kb-panel-head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0.35rem 0.75rem;
+  padding: 0.9rem 1rem 1rem 1.35rem;
+  border-bottom: 1px solid var(--vp-c-divider);
+}
+.kb-panel-kind {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--vp-c-text-3);
+}
+.kb-panel-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.kb-panel-title {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+.kb-panel-title:focus {
+  outline: none;
+}
+.kb-panel-pin {
+  padding: 0.2rem 0.65rem;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--vp-c-text-2);
+  background: none;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.kb-panel-pin:hover {
+  color: var(--vp-c-text-1);
+  border-color: var(--vp-c-text-3);
+}
+.kb-panel-pin[aria-pressed='true'] {
+  color: var(--vp-c-brand-1);
+  background: var(--vp-c-brand-soft);
+  border-color: var(--vp-c-brand-1);
+}
+.kb-panel-open {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--vp-c-brand-1);
+  text-decoration: none;
+}
+.kb-panel-open:hover {
+  text-decoration: underline;
+}
+.kb-panel-close {
+  width: 1.9rem;
+  height: 1.9rem;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--vp-c-text-3);
+  cursor: pointer;
+}
+.kb-panel-close:hover {
+  color: var(--vp-c-text-1);
+  background: var(--vp-c-bg-soft);
+}
+.kb-panel-body {
+  flex: 1;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 1.1rem 1.35rem 2.5rem;
+  font-size: 0.98rem;
+  line-height: 1.6;
+}
+.kb-panel-body > :first-child {
+  margin-top: 0;
+}
+.kb-panel-loading {
+  color: var(--vp-c-text-3);
+}
+
 /* --- Glossary index ------------------------------------------------------- */
 .kb-glossary-list {
   margin: 1.5rem 0;

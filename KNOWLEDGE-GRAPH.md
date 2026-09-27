@@ -113,6 +113,33 @@ object-property keys".
   from the `blogKbUi` (or your own) config.
 - `<GraphView :height :include-generic :types />` — client-only force graph
   (needs the optional `graphology` + `sigma` peers; degrades gracefully).
+- `<Glossary type="schema:DefinedTerm" />` — lists the terms with their
+  excerpts; its links navigate (no preview).
+
+## Concept previews
+
+`withKb` also previews concept pages in place. Any link in page content to a
+node of a preview type (default `schema:DefinedTerm`, the blog preset's
+glossary pages) gets a dotted underline; clicking it, or hovering with a mouse,
+shows a card with the term's title and `excerpt`. A plain markdown link is all
+an author writes — and, being a link, it is also a `schema:mentions` edge.
+
+- **Expand** opens the full term in a side panel (a bottom sheet up to 768px);
+  from 1200px it can be **pinned**, and the page makes room for it.
+- The panel's text comes from a lazily imported data file, so it costs nothing
+  until the first Expand. Add `.vitepress/kb-bodies.data.ts` (see
+  `kb/config/bodies.js`) and pass
+  `preview: { bodies: () => import('../kb-bodies.data').then((m) => m.data) }`
+  in the `withKb` UI config. Without it the card has no Expand.
+- `preview: { types, kind }` changes which nodes preview and the card's label;
+  `preview: false` turns it off.
+- A site with a fixed top bar sets `--kb-panel-top` (and on phones
+  `--kb-sheet-gap`) to clear it; see the comments in `kb.css`.
+
+`blog-starter` wires all of this (`glossary/`, the link in
+`posts/hello-knowledge-graph.md`). `npm run test:browser` builds it and drives
+the card, panel, pin and phone sheet in headless Chrome
+(`kb/test/concept-preview.browser.mjs`; needs Chrome, `CHROME=` to point at it).
 
 ## Verifying
 

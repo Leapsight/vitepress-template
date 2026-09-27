@@ -33,6 +33,7 @@ so `<Concept to="/glossary/typed-feature-structures" />` auto-labels itself.
 import { computed } from 'vue'
 import { withBase } from 'vitepress'
 import { useKbData } from '../composables'
+import { normKey } from '../url'
 
 const props = defineProps<{
   id?: string // KB node @id (CURIE)
@@ -42,14 +43,6 @@ const props = defineProps<{
 }>()
 
 const kb = useKbData()
-
-function normKey(p: string): string {
-  if (!p) return ''
-  let r = p.replace(/\.html$/, '').replace(/[?#].*$/, '')
-  const base = withBase('/')
-  if (base !== '/' && r.startsWith(base)) r = '/' + r.slice(base.length)
-  return r === '/' ? '/' : r.replace(/\/+$/, '')
-}
 
 const node = computed(() => {
   const nodes = kb.graph.nodes

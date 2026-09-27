@@ -12,16 +12,19 @@
 //   export default withKb(Theme, kbData, blogKbUi)
 //
 // `withKb` registers <Backlinks> + <GraphView> globally, provides the graph
-// to them, and wraps the layout so the backlinks panel appears after the doc
-// content on every page.
+// to them, wraps the layout so the backlinks panel appears after the doc
+// content on every page, and, in the browser, installs the concept preview
+// card (preview.ts) on links to concept pages.
 
 import { h, defineComponent } from 'vue'
+import { inBrowser } from 'vitepress'
 import type { Theme as VPTheme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import Backlinks from './components/Backlinks.vue'
 import GraphView from './components/GraphView.vue'
 import Concept from './components/Concept.vue'
 import Glossary from './components/Glossary.vue'
+import { installConceptPreview } from './preview'
 import { KB_DATA_KEY, KB_UI_KEY } from './types'
 import type { KbData, KbUiConfig } from './types'
 import './styles/kb.css'
@@ -62,6 +65,8 @@ export function withKb(baseTheme: VPTheme, data: KbData, ui: KbUiConfig = {}): V
       ctx.app.component('GraphView', GraphView)
       ctx.app.component('Concept', Concept)
       ctx.app.component('Glossary', Glossary)
+      if (inBrowser && ui.preview !== false)
+        installConceptPreview(data.graph.nodes, ui.preview || {}, ctx.siteData.value.cleanUrls ?? false)
     }
   }
 }

@@ -54,6 +54,18 @@ export interface KbUiConfig {
   relatedPredicate?: string
   /** `@type` local-name → CSS color, for the graph view. */
   typeColors?: Record<string, string>
+  /** Concept preview card on links to concept pages (preview.ts); `false` turns it off. */
+  preview?: ConceptPreviewOptions | false
+}
+
+export interface ConceptPreviewOptions {
+  /** Node `@type`s that get a preview. Default `['schema:DefinedTerm']`. */
+  types?: string[]
+  /** Eyebrow text on the card. Default "Concept". */
+  kind?: string
+  /** Rendered concept bodies (kb/config/bodies.js), loaded on the first
+   *  Expand; without it the card has no Expand and there is no panel. */
+  bodies?: () => Promise<Record<string, string>>
 }
 
 export const KB_DATA_KEY = Symbol('kb-data')

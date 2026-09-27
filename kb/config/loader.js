@@ -385,3 +385,5 @@ export function createKbLoader(options) {
     }
   })
 }
+
+export { createKbBodiesLoader } from './bodies.js'

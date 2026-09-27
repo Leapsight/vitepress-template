@@ -36,7 +36,8 @@ export default defineConfig(
             { text: 'Blog', link: '/' },
             { text: 'Tags', link: '/tags/' },
             { text: 'Archive', link: '/archive' },
-            { text: 'Graph', link: '/graph' }
+            { text: 'Graph', link: '/graph' },
+            { text: 'Glossary', link: '/glossary/' }
           ],
           socialLinks: [{ icon: 'github', link: 'https://github.com/leapsight' }],
           footer: {
