@@ -23,6 +23,7 @@ pure shared-tag ranking when the KB graph isn't wired.
 import { computed } from 'vue'
 import { withBase, useData, useRoute } from 'vitepress'
 import { usePosts, useCurrentPost } from '../composables'
+import { newestFirst } from '../../config/order.js'
 import { useKbData } from '@leapsight/vitepress-template/kb'
 
 const props = withDefaults(defineProps<{ limit?: number }>(), { limit: 4 })
@@ -74,7 +75,7 @@ const related = computed(() => {
       return { p, score: shared * 2 + connected + sameSeries }
     })
     .filter((x) => x.score > 0)
-    .sort((a, b) => b.score - a.score || (b.p.date ?? '').localeCompare(a.p.date ?? ''))
+    .sort((a, b) => b.score - a.score || newestFirst(a.p, b.p))
     .slice(0, props.limit)
     .map((x) => x.p)
 })

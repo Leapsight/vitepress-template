@@ -16,6 +16,7 @@ import { writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { Feed } from 'feed'
 import { createContentLoader } from 'vitepress'
+import { newestFirst } from './order.js'
 
 function toArray(v) {
   if (v == null) return []
@@ -70,7 +71,7 @@ export async function emitFeeds(siteConfig, options) {
 
   posts
     .filter((p) => p.frontmatter?.draft !== true)
-    .sort((a, b) => +new Date(b.frontmatter?.date ?? 0) - +new Date(a.frontmatter?.date ?? 0))
+    .sort((a, b) => newestFirst(a.frontmatter ?? {}, b.frontmatter ?? {}))
     .slice(0, limit)
     .forEach((p) => {
       const fm = p.frontmatter ?? {}

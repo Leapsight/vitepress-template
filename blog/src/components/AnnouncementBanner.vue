@@ -43,11 +43,12 @@ transform wired in, no bar is shown.
 import { ref } from 'vue'
 import { withBase } from 'vitepress'
 import { usePosts } from '../composables'
+import { newestFirst } from '../../config/order.js'
 import type { PostSummary } from '../types'
 
 const candidates = usePosts()
   .filter((p) => p.announce)
-  .sort((a, b) => (b.date ?? '').localeCompare(a.date ?? ''))
+  .sort(newestFirst)
 const dismissed = ref<string | null>(null)
 
 function dismiss(p: PostSummary) {

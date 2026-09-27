@@ -18,6 +18,7 @@
 // is build-only), reading posts through the same loader as posts.data.
 
 import { createPostsLoader } from './posts.js'
+import { newestFirst } from './order.js'
 
 /** Inline script: `c` is [{ k: storage key, u: expiry ms | 0 }], newest first. */
 function script(candidates) {
@@ -45,7 +46,7 @@ export function announceTransformPageData(options = {}) {
     const posts = await loader.load()
     const candidates = posts
       .filter((p) => p.announce)
-      .sort((a, b) => (b.date ?? '').localeCompare(a.date ?? ''))
+      .sort(newestFirst)
       .map((p) => ({ k: p.announceKey, u: p.announceUntil ? Date.parse(p.announceUntil) : 0 }))
     if (!candidates.length) return
     pageData.frontmatter ??= {}

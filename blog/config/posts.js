@@ -5,13 +5,14 @@
 //     import { createPostsLoader } from '@leapsight/vitepress-template/blog/config'
 //     export default createPostsLoader({ pattern: 'posts/*.md' })
 //
-// It emits a date-sorted array of post summaries consumed by the listing,
+// It emits a newest-first array (order.js) of post summaries consumed by the listing,
 // tag, author, archive, series and pagination components. Drafts are excluded
 // in production. Frontmatter is Zod-validated (build fails on a bad field).
 
 import { createContentLoader } from 'vitepress'
 import readingTime from 'reading-time'
 import { validatePostFrontmatter } from './frontmatter.js'
+import { newestFirst } from './order.js'
 import { stripFrontmatter } from '@leapsight/vitepress-template/kb/lib/extract.js'
 
 function toArray(v) {
@@ -133,12 +134,7 @@ export function createPostsLoader(options = {}) {
         })
       }
 
-      posts.sort((a, b) => {
-        if (a.date && b.date) return b.date.localeCompare(a.date)
-        if (a.date) return -1
-        if (b.date) return 1
-        return a.title.localeCompare(b.title)
-      })
+      posts.sort(newestFirst)
       return posts
     }
   })
