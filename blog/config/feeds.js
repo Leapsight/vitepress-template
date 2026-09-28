@@ -32,8 +32,17 @@ function toArray(v) {
  *   pattern?: string,
  *   limit?: number,
  *   copyright?: string,
- *   author?: { name?: string, email?: string, link?: string }
+ *   author?: { name?: string, email?: string, link?: string },
+ *   image?: string,
+ *   favicon?: string
  * }} options
+ *
+ * `image` is the feed's logo: the RSS channel <image>, the Atom <logo> and
+ * the JSON Feed `icon`. RSS 2.0 caps its width at 144px and allows only
+ * GIF, JPEG or PNG, so a 144×144 PNG suits all three. `favicon` is the Atom
+ * <icon>. Both are site paths (`/feed-icon.png`), made absolute like the
+ * feed links. Without them a reader guesses, usually from the favicon of
+ * the host the feed's links point at.
  */
 export async function emitFeeds(siteConfig, options) {
   const { hostname, pattern = 'posts/*.md', limit = 50 } = options
@@ -60,7 +69,9 @@ export async function emitFeeds(siteConfig, options) {
       atom: link('/feed.atom'),
       json: link('/feed.json')
     },
-    author: options.author
+    author: options.author,
+    image: options.image ? link(options.image) : undefined,
+    favicon: options.favicon ? link(options.favicon) : undefined
   })
 
   const posts = await createContentLoader(pattern, {
