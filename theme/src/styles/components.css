@@ -13,6 +13,10 @@
 
 .tabs-component-tabs {
   display: flex;
+  /* Tabs wrap rather than scroll: they usually choose a platform or variant,
+     and on a phone every choice should stay in view. On one line they ran
+     off the page. */
+  flex-wrap: wrap;
   align-items: stretch;
   justify-content: flex-start;
   border: solid 1px var(--vp-c-divider);

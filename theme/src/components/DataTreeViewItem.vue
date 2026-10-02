@@ -3,13 +3,17 @@
   <div class="data-tree-item">
     <div v-if="data.type === 'object' || data.type === 'array'" :style="valueStyle">
       <div v-if="data.key != '/'" class="data-key">
-        <code class="property">{{ data.key }}</code>
+        <!-- Vue drops the whitespace between these inline elements, which
+             left a key, its type and its tags as one unbreakable run that ran
+             off a phone screen. Each <wbr> restores a break point and renders
+             nothing. -->
+        <code class="property">{{ data.key }}</code><wbr />
         <span v-if="data.type === 'array'" class="value-type">
           {{ data.type + '[' + data.arrayType + ']' }}
         </span>
-        <span v-else class="value-type">{{ data.type }}</span>
-        <span v-if="data.required" class="value-tag red">REQUIRED</span>
-        <span v-if="isImmutable" class="value-tag">IMMUTABLE</span>
+        <span v-else class="value-type">{{ data.type }}</span><wbr />
+        <span v-if="data.required" class="value-tag red">REQUIRED</span><wbr />
+        <span v-if="isImmutable" class="value-tag">IMMUTABLE</span><wbr />
         <span v-if="data.computed" class="value-tag">COMPUTED</span>
         <div class="object-description" v-html="md.render(data.description || '')"></div>
         <div
@@ -48,13 +52,13 @@
       @keyup.enter="onClick(data)"
       @keyup.space="onClick(data)"
     >
-      <span class="value-key"><code class="property">{{ data.key }}</code></span>
+      <span class="value-key"><code class="property">{{ data.key }}</code></span><wbr />
       <span v-if="isValueType(data.type)" class="value-type">{{ data.type }}</span>
       <span v-else class="value-type">
         <a :href="slug">{{ data.type }}</a>
-      </span>
-      <span v-if="data.required" class="value-tag red">REQUIRED</span>
-      <span v-if="isImmutable" class="value-tag">IMMUTABLE</span>
+      </span><wbr />
+      <span v-if="data.required" class="value-tag red">REQUIRED</span><wbr />
+      <span v-if="isImmutable" class="value-tag">IMMUTABLE</span><wbr />
       <span v-if="data.computed" class="value-tag">COMPUTED</span>
       <div class="value-description" v-html="md.render(data.description || '')" />
       <div
@@ -225,8 +229,14 @@ export default defineComponent({
 .value-key {
   font-size: 16px;
   border-radius: 2px;
-  white-space: nowrap;
   padding: 5px 5px 5px 10px;
+}
+/* The key never breaks. `nowrap` used to sit on the containers instead — a
+   leaf's whole row (which reuses `.value-key`) and an object's `.data-key` —
+   so it held the type and tags on one line with the key, and the
+   descriptions inside needed `white-space: normal` to undo it. */
+.data-tree-item code.property {
+  white-space: nowrap;
 }
 .value-type {
   font-size: 15px;
@@ -245,7 +255,6 @@ export default defineComponent({
   font-weight: 400;
   letter-spacing: 0.15px;
   padding: 5px 5px 5px 10px;
-  white-space: normal;
 }
 .value-description {
   margin-left: 10px;
@@ -303,7 +312,6 @@ export default defineComponent({
   font-family: inherit;
   font-weight: inherit;
   padding: 5px;
-  white-space: nowrap;
   width: 100%;
 }
 .property-toggle {
