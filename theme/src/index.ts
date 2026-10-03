@@ -35,6 +35,8 @@ import BackToTop from './components/BackToTop.vue'
 import NewsletterForm from './components/NewsletterForm.vue'
 import ZulipChannelView from './components/ZulipChannelView.vue'
 import ZulipChannels from './components/ZulipChannels.vue'
+import PageOutline from './components/PageOutline.vue'
+import PageLocalNav from './components/PageLocalNav.vue'
 
 import './styles/vars.css'
 import './styles/base.css'
@@ -62,8 +64,12 @@ export {
   BackToTop,
   NewsletterForm,
   ZulipChannelView,
-  ZulipChannels
+  ZulipChannels,
+  PageOutline,
+  PageLocalNav
 }
+export { usePageOutline, useActiveHeading, useOutlineTitle, collectOutline } from './composables/outline'
+export type { OutlineItem } from './composables/outline'
 
 const theme: Theme = {
   extends: DefaultTheme,
