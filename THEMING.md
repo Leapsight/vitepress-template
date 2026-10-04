@@ -95,7 +95,9 @@ export default {
 
 Component-level knobs the shared CSS exposes:
 
-- Tabs: add class `code` (`::: tabs code`) for the dark code-panel look.
+- Tabs: add class `code` (`:::: tabs code`) for the dark code-panel look.
+  The outer fence is longer than the `::: tab` fences inside it (see the
+  README's markdown kit).
 - Buttons: `.ls-button` + `medium|big` + `brand|alt` combos.
 - `<Pill color="...">` overrides the pill background per instance.
 

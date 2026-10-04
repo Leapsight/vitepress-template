@@ -97,6 +97,25 @@ Definition lists, footnotes, task lists, optional KaTeX; containers
 `::: button URL`; a `v-pre` rule so inline code with `{{ }}` never
 breaks Vue; H1 injection from frontmatter `title:`.
 
+A container closes at the first fence at least as long as its own, so the
+`tabs` fence must be longer than the `tab` fences inside it:
+
+```md
+:::: tabs
+::: tab Bondy
+…
+:::
+::: tab Erlang
+…
+:::
+::::
+```
+
+With equal fences (`:::` throughout), the first tab's closing `:::` ends
+`tabs` as well: the second tab renders outside the tab set and a stray
+`:::` is left in the text, and markdown-it renders it without an error.
+`columns` / `column` nest the same way and break the same way.
+
 ### Config kit (`@leapsight/vitepress-template/theme/config`)
 
 - `withThemeDefaults(config, opts)` — clean URLs, local search,
