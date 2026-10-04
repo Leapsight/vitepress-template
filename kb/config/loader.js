@@ -93,9 +93,15 @@ export function createKbLoader(options) {
   const internalSet = new Set(internalPrefixes)
   const externalSet = new Set(externalPrefixes)
 
-  return createContentLoader(pattern, {
+  // The pages the site leaves out (`srcExclude`) are not nodes either, so the
+  // site config stays the one list of what is published. Relative patterns
+  // resolve against `srcDir`, as srcExclude's do.
+  const config = globalThis.VITEPRESS_CONFIG
+  const srcExclude = config?.userConfig?.srcExclude ?? []
+
+  const loader = createContentLoader(pattern, {
     includeSrc: true,
-    globOptions: { ignore },
+    globOptions: { ignore: [...ignore, ...srcExclude], ...(config?.srcDir ? { cwd: config.srcDir } : {}) },
     async transform(rawPages) {
       const ontology = context ? buildOntology(context) : loadOntology(contextPath)
 
@@ -384,6 +390,14 @@ export function createKbLoader(options) {
       return result
     }
   })
+
+  // VitePress calls a data loader's `load` with the files matching its `watch`
+  // pattern, and createContentLoader globs only when it is given none, so
+  // `ignore` (and srcExclude above) never applied in dev or build (VitePress
+  // 1.6, createContentLoader: `if (!files) files = await glob(...)`). Loading
+  // without the list makes every load glob with the exclusions. Its per-file
+  // cache still skips unchanged files.
+  return { watch: loader.watch, load: () => loader.load() }
 }
 
 export { createKbBodiesLoader } from './bodies.js'
