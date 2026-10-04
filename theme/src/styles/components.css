@@ -96,6 +96,57 @@
 }
 
 /* -------------------------------------------------------------- */
+/* CODE GROUPS (VitePress's `::: code-group`)                       */
+/* -------------------------------------------------------------- */
+/* One plate: the tab strip is its header and the blocks below share its
+   background, so the group reads as a single code block with a switch on
+   top. The group owns the plate's outer shape (radius, border, margin); the
+   blocks inside drop theirs. The strip stays inside the plate at every
+   width — VitePress pulls it 24px past both sides below 640px to reach its
+   own page edge, which overhangs any layout padded differently.
+
+   Every value is a token; the defaults are VitePress's own, so a site that
+   sets none sees VitePress's code group with the strip and blocks joined:
+
+     --ls-code-radius            plate corners            (8px)
+     --ls-code-margin            plate's outer margin     (16px 0)
+     --ls-code-border            plate's outline          (none)
+     --ls-code-tab-padding       strip's inner padding    (0 12px)
+     --ls-code-tab-height        strip's height           (48px)
+     --ls-code-tab-font          label font               (inherit)
+     --ls-code-tab-font-size     label size               (14px)
+     --ls-code-tab-weight        label weight             (500)
+     --ls-code-tab-tracking      label letter-spacing     (normal)
+     --ls-code-tab-transform     label text-transform     (none)
+
+   Colours come from VitePress's --vp-code-tab-* and --vp-code-block-bg. */
+.vp-doc .vp-code-group {
+  margin: var(--ls-code-margin, 16px 0);
+  border: var(--ls-code-border, none);
+  border-radius: var(--ls-code-radius, 8px);
+  background-color: var(--vp-code-block-bg);
+  overflow: hidden;
+}
+.vp-doc .vp-code-group .tabs {
+  margin: 0;
+  border-radius: 0;
+  padding: var(--ls-code-tab-padding, 0 12px);
+}
+.vp-doc .vp-code-group .tabs label {
+  line-height: var(--ls-code-tab-height, 48px);
+  font-family: var(--ls-code-tab-font, inherit);
+  font-size: var(--ls-code-tab-font-size, 14px);
+  font-weight: var(--ls-code-tab-weight, 500);
+  letter-spacing: var(--ls-code-tab-tracking, normal);
+  text-transform: var(--ls-code-tab-transform, none);
+}
+.vp-doc .vp-code-group div[class*='language-'] {
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* -------------------------------------------------------------- */
 /* BUTTONS (`::: button URL` container and .ls-button class)       */
 /* -------------------------------------------------------------- */
 
