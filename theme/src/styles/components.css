@@ -100,7 +100,10 @@
 /* -------------------------------------------------------------- */
 /* One plate: the tab strip is its header and the blocks below share its
    background, so the group reads as a single code block with a switch on
-   top. The group owns the plate's outer shape (radius, border, margin); the
+   top. The selected tab is a capsule, tinted and outlined in its own text
+   colour, in place of VitePress's underline: a 2px rule under one label read
+   as a stray line on a dark plate, and a capsule holds whether the labels sit
+   on one line or wrap onto several. The group owns the plate's outer shape (radius, border, margin); the
    blocks inside drop theirs. The strip stays inside the plate at every
    width — VitePress pulls it 24px past both sides below 640px to reach its
    own page edge, which overhangs any layout padded differently.
@@ -111,13 +114,15 @@
      --ls-code-radius            plate corners            (8px)
      --ls-code-margin            plate's outer margin     (16px 0)
      --ls-code-border            plate's outline          (none)
-     --ls-code-tab-padding       strip's inner padding    (0 12px)
-     --ls-code-tab-height        strip's height           (48px)
+     --ls-code-tab-padding       strip's inner padding    (10px 12px)
+     --ls-code-tab-height        a tab's height           (32px)
      --ls-code-tab-font          label font               (inherit)
      --ls-code-tab-font-size     label size               (14px)
      --ls-code-tab-weight        label weight             (500)
      --ls-code-tab-tracking      label letter-spacing     (normal)
      --ls-code-tab-transform     label text-transform     (none)
+     --ls-code-tab-active-bg     selected tab's fill      (its text colour at 10%)
+     --ls-code-tab-active-border selected tab's outline   (its text colour at 18%)
 
    Colours come from VitePress's --vp-code-tab-* and --vp-code-block-bg. */
 .vp-doc .vp-code-group {
@@ -127,18 +132,44 @@
   background-color: var(--vp-code-block-bg);
   overflow: hidden;
 }
+/* The labels wrap rather than scroll, as the TABS above do: every version
+   on offer stays in view on a phone, where a scrolling strip cut the second
+   label at the plate's edge and hid the third. */
 .vp-doc .vp-code-group .tabs {
   margin: 0;
   border-radius: 0;
-  padding: var(--ls-code-tab-padding, 0 12px);
+  padding: var(--ls-code-tab-padding, 10px 12px);
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
 }
 .vp-doc .vp-code-group .tabs label {
-  line-height: var(--ls-code-tab-height, 48px);
+  padding: 0 14px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  line-height: var(--ls-code-tab-height, 32px);
   font-family: var(--ls-code-tab-font, inherit);
   font-size: var(--ls-code-tab-font-size, 14px);
   font-weight: var(--ls-code-tab-weight, 500);
   letter-spacing: var(--ls-code-tab-tracking, normal);
   text-transform: var(--ls-code-tab-transform, none);
+  transition: color 0.25s, background-color 0.25s, border-color 0.25s;
+}
+.vp-doc .vp-code-group .tabs label::after {
+  display: none;
+}
+.vp-doc .vp-code-group .tabs label:hover {
+  background-color: color-mix(in srgb, var(--vp-code-tab-hover-text-color) 5%, transparent);
+}
+.vp-doc .vp-code-group .tabs input:checked + label {
+  background-color: var(--ls-code-tab-active-bg, color-mix(in srgb, var(--vp-code-tab-active-text-color) 10%, transparent));
+  border-color: var(--ls-code-tab-active-border, color-mix(in srgb, var(--vp-code-tab-active-text-color) 18%, transparent));
+}
+/* The tabs are radio inputs, reachable from the keyboard but invisible, so
+   the label shows where focus is. */
+.vp-doc .vp-code-group .tabs input:focus-visible + label {
+  outline: 2px solid var(--vp-code-tab-active-text-color);
+  outline-offset: 2px;
 }
 .vp-doc .vp-code-group div[class*='language-'] {
   margin: 0 !important;
