@@ -14,6 +14,11 @@ Submits inline via Mailchimp's JSONP endpoint (no page navigation) and shows a
 success/error message. Without JavaScript it still works: the plain <form>
 POSTs to Mailchimp in a new tab (progressive enhancement). Includes Mailchimp's
 bot-honeypot field, derived from the action URL.
+
+When the audience has reCAPTCHA turned on, the JSONP endpoint cannot show it
+and answers with the message "captcha". The form then offers to continue on
+Mailchimp's hosted page, which posts the same fields there in a new tab, where
+the challenge can be shown.
 -->
 <template>
   <div class="nl" :class="`nl--${state}`">
@@ -24,6 +29,7 @@ bot-honeypot field, derived from the action URL.
 
     <form
       v-else
+      ref="form"
       class="nl-form"
       method="post"
       target="_blank"
@@ -56,6 +62,10 @@ bot-honeypot field, derived from the action URL.
       </div>
 
       <p v-if="state === 'error'" class="nl-msg nl-msg--err" role="alert">{{ message }}</p>
+      <p v-if="state === 'captcha'" class="nl-msg" role="alert">
+        Mailchimp needs to check that you're not a robot.
+        <button type="button" class="nl-continue" @click="continueOnMailchimp">Continue on Mailchimp</button>
+      </p>
     </form>
   </div>
 </template>
@@ -78,8 +88,17 @@ const email = ref('')
 const fname = ref('')
 const lname = ref('')
 const hp = ref('')
-const state = ref<'idle' | 'loading' | 'success' | 'error'>('idle')
+const state = ref<'idle' | 'loading' | 'success' | 'error' | 'captcha'>('idle')
 const message = ref('')
+const form = ref<HTMLFormElement>()
+
+// A native submit() skips the submit handler, so the form posts its own fields
+// to the hosted endpoint in the tab its target names. It runs from a click, so
+// the browser does not block the new tab as a pop-up.
+function continueOnMailchimp() {
+  form.value?.submit()
+  state.value = 'idle'
+}
 
 // Mailchimp's honeypot field is named b_<u>_<id>, taken from the action URL.
 const honeypot = computed(() => {
@@ -129,6 +148,8 @@ function onSubmit() {
     if (data && data.result === 'success') {
       state.value = 'success'
       message.value = stripHtml(data.msg) || 'Thanks — please check your inbox to confirm.'
+    } else if (stripHtml(data && data.msg).toLowerCase() === 'captcha') {
+      state.value = 'captcha'
     } else {
       state.value = 'error'
       message.value = stripHtml(data && data.msg) || 'Subscription failed — please try again.'
@@ -216,6 +237,16 @@ function onSubmit() {
 }
 .nl-msg--err {
   color: var(--vp-c-danger-1, #e05252);
+}
+.nl-continue {
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  color: inherit;
+  background: none;
+  border: 0;
+  text-decoration: underline;
+  cursor: pointer;
 }
 @media (max-width: 560px) {
   .nl-row {
