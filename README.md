@@ -73,7 +73,9 @@ and graph-proximity related posts, with integrity enforced by a SHACL gate.
 - **DRAFT watermark** — frontmatter `draft: true`
 - **Related cards** before the footer — frontmatter `related:` list
 - **Navbar version picker** — `themeConfig.versions` (static badge for
-  one version, dropdown for several)
+  one version, dropdown for several). `themeConfig.version` names the
+  version a build documents; `themeConfig.versionsUrl` fetches the list at
+  load time, so an archived build shows versions released after it.
 - **Back-to-top button** on desktop
 - Extra layout slots pass through, so a site can wrap the layout again.
 

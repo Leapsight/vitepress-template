@@ -6,7 +6,14 @@ config:
     versions: [
       { version: '1.2.0', label: '1.2.0', current: true },
       { version: '1.1.0', label: '1.1.0', link: '/v1.1.0/' }
-    ]
+    ],
+    // Optional. The version this build documents; the trigger shows it and
+    // the menu marks it. Defaults to the entry marked `current`.
+    version: '1.1.0',
+    // Optional. A JSON array of the same entries, fetched on mount to
+    // replace `versions`, so an archived build lists versions released
+    // after it. Use a site-root path, served by the live deployment.
+    versionsUrl: '/versions.json'
   }
 
 Rendering modes:
@@ -39,25 +46,25 @@ slot; renders nothing when `versions` is absent or empty.
       class="trigger"
       :aria-expanded="isOpen"
       aria-haspopup="listbox"
-      :title="`Version ${current.label}`"
+      :title="`Version ${active.label}`"
       @click="toggle"
     >
       <span class="prefix">v</span>
-      <span class="value">{{ current.label }}</span>
+      <span class="value">{{ active.label }}</span>
       <span class="chevron" aria-hidden="true">▾</span>
     </button>
-    <span v-else class="static" :title="`Version ${current.label}`">
+    <span v-else class="static" :title="`Version ${active.label}`">
       <span class="prefix">v</span>
-      <span class="value">{{ current.label }}</span>
+      <span class="value">{{ active.label }}</span>
     </span>
 
     <ul v-if="multiple && isOpen" ref="menu" class="menu" role="listbox" aria-label="Version">
       <li v-for="v in versions" :key="v.version">
         <a
           class="menu-item"
-          :class="{ 'is-active': v.version === current.version }"
+          :class="{ 'is-active': v.version === active.version }"
           role="option"
-          :aria-selected="v.version === current.version"
+          :aria-selected="v.version === active.version"
           :href="versionHref(v)"
           target="_self"
           @click="close"
@@ -84,11 +91,30 @@ export interface VersionEntry {
 
 const { theme } = useData()
 
-const versions = computed<VersionEntry[]>(() => theme.value.versions ?? [])
+// The list built into this site is only what was known at build time. An
+// archived version never learns of a later one, so when `versionsUrl` is set
+// the list is replaced on mount by the one fetched from that URL (a JSON
+// array of VersionEntry). Point it at a site-root path: the root is the live
+// deployment, so every archived build then shows the current list. The
+// built-in list stays when the fetch fails.
+const fetched = ref<VersionEntry[] | null>(null)
+const versions = computed<VersionEntry[]>(() => fetched.value ?? theme.value.versions ?? [])
 
+// `current` is the latest version and carries the "current" badge.
+// `active` is the version this build documents: `themeConfig.version`, or
+// the latest version when it is not set. The trigger shows `active`.
 const current = computed<VersionEntry>(
   () => versions.value.find((v) => v.current) ?? versions.value[0] ?? { version: '0.0.0', label: '0.0.0' }
 )
+const active = computed<VersionEntry>(() => {
+  const own = theme.value.version as string | undefined
+  if (!own) return current.value
+  return (
+    versions.value.find((v) => v.version === own) ??
+    (theme.value.versions ?? []).find((v: VersionEntry) => v.version === own) ??
+    { version: own, label: own }
+  )
+})
 const hasAny = computed(() => versions.value.length > 0)
 const multiple = computed(() => versions.value.length > 1)
 
@@ -122,9 +148,18 @@ function onKey(e: KeyboardEvent) {
   if (e.key === 'Escape') close()
 }
 
-onMounted(() => {
+onMounted(async () => {
   document.addEventListener('click', onDocClick)
   document.addEventListener('keydown', onKey)
+  const url = theme.value.versionsUrl as string | undefined
+  if (!url) return
+  try {
+    const res = await fetch(url, { cache: 'no-cache' })
+    const list = res.ok ? await res.json() : null
+    if (Array.isArray(list) && list.length) fetched.value = list
+  } catch {
+    // Keep the built-in list.
+  }
 })
 onBeforeUnmount(() => {
   document.removeEventListener('click', onDocClick)
