@@ -20,6 +20,13 @@ through withBase(): every version is a separate deployment with its own
 base, so an archived build would otherwise prefix its siblings' paths
 with its own and 404.
 
+Each link carries `target="_self"` so the browser does a full page load.
+Without it the VitePress router intercepts the click (same origin, HTML
+path) and resolves the target against the current build's routes, which
+do not include a sibling version, so it renders the 404 page. The router
+skips any link that has a `target` attribute (vitepress 1.6.4,
+dist/client/app/router.js, click handler).
+
 Mounted automatically via the theme Layout's `nav-bar-content-after`
 slot; renders nothing when `versions` is absent or empty.
 -->
@@ -52,6 +59,7 @@ slot; renders nothing when `versions` is absent or empty.
           role="option"
           :aria-selected="v.version === current.version"
           :href="versionHref(v)"
+          target="_self"
           @click="close"
         >
           <span class="menu-label">v{{ v.label }}</span>
