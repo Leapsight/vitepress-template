@@ -10,6 +10,8 @@
  *   ::: tab NAME        → <Tab name="NAME">
  *   ::: columns / ::: column   → two-column layout (desktop)
  *   ::: definition TITLE       → definition admonition
+ *   ::: code-group NAME        → a code group that follows the reader's
+ *                                choice for NAME (see registerCodeGroupSync)
  *   ::: button URL             → big centered action button
  *   definition lists, footnotes, task lists
  *   optional KaTeX math (options.math — remember the KaTeX CSS)
@@ -43,6 +45,8 @@ export function applyMarkdown(md, options = {}) {
   if (containers) {
     registerContainers(md, base)
   }
+
+  registerCodeGroupSync(md)
 
   if (vPreCode) {
     // Inline code is otherwise compiled as a Vue template — content
@@ -165,4 +169,52 @@ function registerContainers(md, base = '/') {
       return '</a></div>\n'
     }
   })
+}
+
+const CODE_GROUP_OPEN = 'container_code-group_open'
+const CODE_GROUP_NAME = /^[a-z][a-z0-9-]*$/
+const CODE_GROUP_ROOT = '<div class="vp-code-group'
+
+/**
+ * `::: code-group NAME` marks VitePress's code group with
+ * `data-ls-sync="NAME"`. The client (theme/src/lib/code-group-sync.ts)
+ * keeps every group carrying the same NAME on the same tab. A code group
+ * with no name is left exactly as VitePress renders it.
+ *
+ * This wraps VitePress's own renderer rather than replacing it, and
+ * depends on two things read in VitePress 1.6.4's source
+ * (createCodeGroup and createMarkdownRenderer in dist/node):
+ * `markdown.config` runs after the built-in containers are registered, and
+ * the group's root is emitted as `<div class="vp-code-group…`. Both are
+ * exercised by markdown.test.js against the installed VitePress; if the
+ * root markup changes the build throws here instead of dropping the mark.
+ *
+ * NAME is lower-case letters, digits and hyphens: it is also the URL
+ * parameter and the storage key the client uses.
+ *
+ * @param {import('markdown-it')} md
+ */
+function registerCodeGroupSync(md) {
+  const render = md.renderer.rules[CODE_GROUP_OPEN]
+  // Not VitePress's renderer: there is no code group to mark.
+  if (!render) return
+
+  md.renderer.rules[CODE_GROUP_OPEN] = (tokens, idx, options, env, self) => {
+    const html = render(tokens, idx, options, env, self)
+    if (tokens[idx].nesting !== 1) return html
+
+    const name = tokens[idx].info.trim().slice('code-group'.length).trim()
+    if (!name) return html
+    if (!CODE_GROUP_NAME.test(name)) {
+      throw new Error(
+        `::: code-group ${name} — the name must be lower-case letters, digits and hyphens, starting with a letter`
+      )
+    }
+    if (!html.startsWith(CODE_GROUP_ROOT)) {
+      throw new Error(
+        `::: code-group ${name} — VitePress's code-group markup is not the one this theme marks; see registerCodeGroupSync`
+      )
+    }
+    return `<div data-ls-sync="${name}"` + html.slice('<div'.length)
+  }
 }

@@ -37,6 +37,23 @@ IO.puts("Hello from Elixir")
 
 ::::
 
+## Code group
+
+A named code group follows the reader's choice across the site — see
+[Synced Code Groups](/guide/basics/code-groups).
+
+::: code-group lang
+
+```js [JavaScript]
+console.log('Hello from JavaScript')
+```
+
+```erlang [Erlang]
+io:format("Hello from Erlang~n").
+```
+
+:::
+
 ## Card grid
 
 <CardGrid :cards="[

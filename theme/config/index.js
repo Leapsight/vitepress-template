@@ -15,6 +15,7 @@
  *   }))
  */
 import { applyMarkdown } from './markdown.js'
+import { codeGroupChoices } from '../src/lib/code-group-choices.js'
 
 export { applyMarkdown } from './markdown.js'
 export { buildContentSidebar, humanize } from './sidebar.js'
@@ -28,6 +29,14 @@ const THEME_PKG = '@leapsight/vitepress-template'
  *   - local search (unless the site configures its own)
  *   - the shared markdown kit (containers, v-pre fix, title
  *     injection), composed BEFORE the site's own `markdown.config`
+ *   - an inline `<head>` script that puts named code groups
+ *     (`::: code-group NAME`) on the reader's choice while the page is
+ *     parsed, so it is never painted on another tab. It is
+ *     `codeGroupChoices`, the function the client imports, serialised with
+ *     toString(). Checked with every script file blocked by
+ *     theme/test/code-group-sync.browser.mjs. A site whose
+ *     Content-Security-Policy forbids inline scripts loses only this: the
+ *     client still applies the choice once it has started.
  *   - `vite.ssr.noExternal` for the theme package (it ships raw
  *     `.vue`/`.ts` source)
  *   - `vite.optimizeDeps.exclude` for it too: esbuild's dev pre-bundle
@@ -49,6 +58,8 @@ export function withThemeDefaults(userConfig = {}, opts = {}) {
     cleanUrls: true,
     lastUpdated: true,
     ...userConfig,
+
+    head: [...(userConfig.head ?? []), ['script', {}, `(${codeGroupChoices})().applyWhileParsing()`]],
 
     markdown: {
       ...userMarkdown,

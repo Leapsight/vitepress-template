@@ -6,6 +6,8 @@ Shared layout: wraps VitePress's default layout and adds
     `related:` (array of { text, link, description?, icon?, ... })
   - the navbar version widget (when themeConfig.versions is set)
   - a floating back-to-top button
+  - named code groups (`::: code-group NAME`) that follow the reader's
+    last choice across the site
 
 Sites that need more slots can wrap this Layout again in their own
 theme file and pass slots through. Every slot reaches VitePress's layout.
@@ -20,8 +22,11 @@ import DefaultTheme from 'vitepress/theme'
 import Features from './components/Features.vue'
 import NavbarVersion from './components/NavbarVersion.vue'
 import BackToTop from './components/BackToTop.vue'
+import { useCodeGroupSync } from './lib/code-group-sync'
 
 const { Layout } = DefaultTheme
+
+useCodeGroupSync()
 
 // Forwarded by the loop below would mean defined twice, and the forwarded
 // copy wins, so these are excluded from it and composed explicitly.

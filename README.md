@@ -118,11 +118,54 @@ With equal fences (`:::` throughout), the first tab's closing `:::` ends
 `:::` is left in the text, and markdown-it renders it without an error.
 `columns` / `column` nest the same way and break the same way.
 
+#### Named code groups
+
+Give VitePress's `::: code-group` a name and it follows the reader's
+choice: picking a tab in one group switches every group of that name, on
+every page, and the choice is there on the next visit.
+
+````md
+::: code-group sdk
+
+```js [JavaScript]
+…
+```
+
+```erlang [Erlang]
+…
+```
+
+:::
+````
+
+- The name is lower-case letters, digits and hyphens; anything else fails
+  the build. Each name is its own choice. A code group with no name is
+  VitePress's own and follows nothing.
+- A tab is matched by its label, ignoring case, so use the same labels in
+  every group of a name.
+- A group that lacks the chosen tab shows its first tab. Put the tabs in the
+  same order everywhere: the first one is what a new reader sees.
+- A link can carry a choice: `/some/page?sdk=erlang`. It comes before the
+  reader's stored choice on that page and stores nothing.
+- The choice is kept in the browser's `localStorage` under
+  `ls-code-group.<name>`. It is not a cookie and is not sent to a server.
+  If the browser refuses storage, groups on a page still follow each other.
+- `withThemeDefaults` adds a small inline `<head>` script so a page loads
+  already on the reader's tab. A site that assembles its config without
+  `withThemeDefaults`, or whose Content-Security-Policy forbids inline
+  scripts, gets the choice applied once the page's scripts have started
+  instead.
+
+Tests: `node --test theme/config/markdown.test.js` (the markdown side, in
+VitePress's real renderer) and `npm run test:browser:theme` (the browser
+side, in headless Chrome against the built starter; add `DEV=1` to run it
+against `vitepress dev`). Browsers other than Chrome are not covered.
+
 ### Config kit (`@leapsight/vitepress-template/theme/config`)
 
 - `withThemeDefaults(config, opts)` — clean URLs, local search,
-  markdown kit and `ssr.noExternal` wiring, deep-merged under your
-  config.
+  markdown kit, the named-code-group `<head>` script and `ssr.noExternal`
+  wiring, deep-merged under your config.
 - `buildContentSidebar(srcDir, '/section')` — filesystem-driven
   sidebar: subdirectories become groups; pages sort by frontmatter
   `order:`; `title`, `description`, `feature` are read from
