@@ -14,7 +14,7 @@ also has `draft: true`, hence the watermark.)
 
 Authored with the `::: tabs` / `::: tab NAME` containers:
 
-::: tabs
+:::: tabs
 
 ::: tab Erlang
 
@@ -35,7 +35,7 @@ IO.puts("Hello from Elixir")
 
 :::
 
-:::
+::::
 
 ## Card grid
 
